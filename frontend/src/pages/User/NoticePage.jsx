@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { Bell, Calendar, User, AlertCircle, Info, CheckCircle, Clock } from 'lucide-react';
-import api from '../../api/api';
+import { noticeAPI } from '../../api/noticeApi';
 
 const NoticePage = () => {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ const NoticePage = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await api.get('/notices');
+        const response = await noticeAPI.getAllNotices();
         setNotices(response.data.notices);
       } catch (error) {
         console.error('Error fetching notices:', error);

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { Bell, AlertCircle, Info, CheckCircle, Calendar, Send, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../api/api';
+import { noticeAPI } from '../../api/noticeApi';
 
 const AdminPublishNoticePage = () => {
   const { user } = useAuth();
@@ -93,7 +93,7 @@ const AdminPublishNoticePage = () => {
         priority: formData.priority,
       };
 
-      await api.post('/notices', noticeData);
+      await noticeAPI.createNotice(noticeData);
 
       toast.success('Notice published successfully');
       // Reset form

@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { Send, AlertTriangle, Wrench, Users, Home, MessageSquare, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../api/api';
+import { complaintAPI } from '../../api/complaintApi';
 
 const ComplaintPage = () => {
-  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userComplaints, setUserComplaints] = useState([]);
   const [loadingComplaints, setLoadingComplaints] = useState(true);
@@ -35,7 +33,7 @@ const ComplaintPage = () => {
   useEffect(() => {
     const fetchUserComplaints = async () => {
       try {
-        const response = await api.get('/complaints/my');
+        const response = await complaintAPI.getUserComplaints();
         setUserComplaints(response.data);
       } catch (error) {
         console.error('Error fetching complaints:', error);
@@ -74,7 +72,7 @@ const ComplaintPage = () => {
         priority: formData.priority,
       };
 
-      const response = await api.post('/complaints', complaintData);
+      await complaintAPI.createComplaint(complaintData);
 
       toast.success('Complaint submitted successfully! We will review it within 24 hours.');
 
@@ -87,7 +85,7 @@ const ComplaintPage = () => {
       });
 
       // Refresh complaints list
-      const complaintsResponse = await api.get('/complaints/my');
+      const complaintsResponse = await complaintAPI.getUserComplaints();
       setUserComplaints(complaintsResponse.data);
 
     } catch (error) {

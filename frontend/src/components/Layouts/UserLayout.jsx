@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { User, LogOut, Home, MessageSquare, Bell } from 'lucide-react';
 import { toast } from 'sonner';
 

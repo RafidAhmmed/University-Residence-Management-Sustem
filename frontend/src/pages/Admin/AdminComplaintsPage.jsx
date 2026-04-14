@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, Filter, Search, Eye, Reply } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../api/api';
+import { complaintAPI } from '../../api/complaintApi';
 
 const AdminComplaintsPage = () => {
   const { user } = useAuth();
@@ -17,7 +17,7 @@ const AdminComplaintsPage = () => {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await api.get('/complaints');
+        const response = await complaintAPI.getAllComplaints();
         setComplaints(response.data.complaints);
       } catch (error) {
         console.error('Error fetching complaints:', error);
@@ -113,7 +113,7 @@ const AdminComplaintsPage = () => {
 
   const updateComplaintStatus = async (complaintId, newStatus) => {
     try {
-      await api.put(`/complaints/${complaintId}/status`, { status: newStatus });
+      await complaintAPI.updateComplaintStatus(complaintId, { status: newStatus });
       setComplaints(prev => prev.map(complaint =>
         complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
       ));
@@ -131,7 +131,7 @@ const AdminComplaintsPage = () => {
     }
 
     try {
-      await api.put(`/complaints/${complaintId}/status`, {
+      await complaintAPI.updateComplaintStatus(complaintId, {
         status: 'in-progress',
         adminResponse: responseText
       });

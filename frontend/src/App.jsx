@@ -16,6 +16,7 @@ import UserProfile from './pages/User/UserProfile';
 import ComplaintPage from './pages/User/ComplaintPage';
 import NoticePage from './pages/User/NoticePage';
 import Notice from './pages/Public/Notice';
+import NoticeDetail from './pages/Public/NoticeDetail';
 import Facilities from './pages/Public/Facilities';
 import RoomAllocation from './pages/Public/RoomAllocation';
 import Contact  from  './pages/Public/Contact';
@@ -37,6 +38,7 @@ function App() {
           <Route path="/" element={<PublicLayout />}>
             <Route index element={<HomePage />} />
             <Route path="notice" element={<Notice />} />
+            <Route path="notice/:id" element={<NoticeDetail />} />
             <Route path="facilities" element={<Facilities />} />
             <Route path="room-allocation" element={<RoomAllocation />} />
              <Route path="contact" element={<Contact />} />

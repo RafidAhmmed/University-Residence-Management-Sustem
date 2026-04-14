@@ -1,16 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/api';
+import React, { createContext, useState, useEffect } from 'react';
+import { authAPI } from '../api/authApi';
+import { userAPI } from '../api/userApi';
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
+export { AuthContext };
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await authAPI.login(credentials);
       const data = response.data;
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
@@ -42,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await authAPI.register(userData);
       const data = response.data;
       return data;
     } catch (error) {
@@ -52,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.post('/auth/logout');
+      await authAPI.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -73,6 +67,22 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (userData) => {
     setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      if (user && user.id) {
+        const response = await userAPI.getUser(user.id);
+        const fullUserData = response.data;
+        setUser(fullUserData);
+        localStorage.setItem('user', JSON.stringify(fullUserData));
+        return fullUserData;
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+      throw error;
+    }
   };
 
   const value = {
@@ -85,6 +95,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin,
     isAuthenticated,
     updateUser,
+    fetchUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

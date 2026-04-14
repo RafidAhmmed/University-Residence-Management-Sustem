@@ -55,6 +55,25 @@ class UserService {
 
     return { user: { id: user._id, name: user.name, studentId: user.studentId, role: user.role }, token };
   }
+
+  async updateUserProfile(id, profileData) {
+    // Define allowed profile fields
+    const allowedFields = [
+      'name', 'email', 'phone', 'dateOfBirth', 'session', 'department',
+      'bloodGroup', 'homeTown', 'profilePicture'
+    ];
+
+    // Filter out only allowed fields
+    const filteredData = {};
+    Object.keys(profileData).forEach(key => {
+      if (allowedFields.includes(key)) {
+        filteredData[key] = profileData[key];
+      }
+    });
+
+    // Update the user profile
+    return await User.findByIdAndUpdate(id, filteredData, { new: true });
+  }
 }
 
 module.exports = new UserService();
