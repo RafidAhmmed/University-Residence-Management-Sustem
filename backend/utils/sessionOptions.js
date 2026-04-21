@@ -3,8 +3,9 @@ const SESSION_START_YEAR = 2009;
 const getSessionOptions = (date = new Date()) => {
   const currentYear = date.getFullYear();
   const sessions = [];
+  const lastStartYear = currentYear - 1;
 
-  for (let year = SESSION_START_YEAR; year <= currentYear; year += 1) {
+  for (let year = SESSION_START_YEAR; year <= lastStartYear; year += 1) {
     sessions.push(`${year}-${year + 1}`);
   }
 
