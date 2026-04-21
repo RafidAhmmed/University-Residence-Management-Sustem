@@ -11,7 +11,7 @@ const noticeSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['announcement', 'maintenance', 'event', 'emergency', 'general'],
+    enum: ['maintenance', 'event', 'emergency', 'general'],
     required: true,
   },
   priority: {
@@ -31,6 +31,14 @@ const noticeSchema = new mongoose.Schema({
   publishedAt: {
     type: Date,
     default: Date.now,
+  },
+  pdfUrl: {
+    type: String,
+    default: null,
+  },
+  googleFormUrl: {
+    type: String,
+    default: null,
   },
 }, {
   timestamps: true,

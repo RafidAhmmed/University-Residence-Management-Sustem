@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { Bell, AlertCircle, Info, CheckCircle, Calendar, Send, Save } from 'lucide-react';
+import { Bell, AlertCircle, CheckCircle, Calendar, Send, Save, FileText, Link as LinkIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { noticeAPI } from '../../api/noticeApi';
 
@@ -9,15 +9,16 @@ const AdminPublishNoticePage = () => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    type: 'announcement',
+    type: 'general',
     priority: 'medium',
     isPublished: false,
+    googleFormUrl: '',
   });
+  const [pdfFile, setPdfFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
 
   const noticeTypes = [
-    { value: 'announcement', label: 'General Announcement', icon: <Info className="w-4 h-4" />, color: 'text-purple-600' },
     { value: 'maintenance', label: 'Maintenance Notice', icon: <AlertCircle className="w-4 h-4" />, color: 'text-orange-600' },
     { value: 'event', label: 'Event Notice', icon: <Calendar className="w-4 h-4" />, color: 'text-green-600' },
     { value: 'emergency', label: 'Emergency Notice', icon: <AlertCircle className="w-4 h-4" />, color: 'text-red-600' },
@@ -52,6 +53,28 @@ const AdminPublishNoticePage = () => {
     }));
   };
 
+  const handlePdfChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setPdfFile(null);
+      return;
+    }
+
+    if (file.type !== 'application/pdf') {
+      toast.error('Only PDF files are allowed');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('PDF size must be 10MB or smaller');
+      e.target.value = '';
+      return;
+    }
+
+    setPdfFile(file);
+  };
+
   const validateForm = () => {
     if (!formData.title.trim()) {
       toast.error('Please enter a notice title');
@@ -61,6 +84,20 @@ const AdminPublishNoticePage = () => {
       toast.error('Please enter notice content');
       return false;
     }
+
+    if (formData.googleFormUrl.trim()) {
+      try {
+        const parsed = new URL(formData.googleFormUrl.trim());
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          toast.error('Google Form link must start with http:// or https://');
+          return false;
+        }
+      } catch {
+        toast.error('Please enter a valid Google Form URL');
+        return false;
+      }
+    }
+
     return true;
   };
 
@@ -86,12 +123,17 @@ const AdminPublishNoticePage = () => {
 
     setLoading(true);
     try {
-      const noticeData = {
-        title: formData.title,
-        content: formData.content,
-        type: formData.type,
-        priority: formData.priority,
-      };
+      const noticeData = new FormData();
+      noticeData.append('title', formData.title);
+      noticeData.append('content', formData.content);
+      noticeData.append('type', formData.type);
+      noticeData.append('priority', formData.priority);
+      if (formData.googleFormUrl.trim()) {
+        noticeData.append('googleFormUrl', formData.googleFormUrl.trim());
+      }
+      if (pdfFile) {
+        noticeData.append('pdfFile', pdfFile);
+      }
 
       await noticeAPI.createNotice(noticeData);
 
@@ -100,10 +142,12 @@ const AdminPublishNoticePage = () => {
       setFormData({
         title: '',
         content: '',
-        type: 'announcement',
+        type: 'general',
         priority: 'medium',
         isPublished: false,
+        googleFormUrl: '',
       });
+      setPdfFile(null);
     } catch (error) {
       console.error('Error publishing notice:', error);
       toast.error(error.response?.data?.error || 'Failed to publish notice');
@@ -232,6 +276,40 @@ const AdminPublishNoticePage = () => {
                   </p>
                 </div>
 
+                {/* Optional PDF Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Attach PDF (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handlePdfChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Upload a PDF notice file (max 10MB).
+                  </p>
+                  {pdfFile && (
+                    <p className="text-sm text-[#19aaba] mt-2">Selected: {pdfFile.name}</p>
+                  )}
+                </div>
+
+                {/* Optional Google Form Link */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Google Form Link (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    name="googleFormUrl"
+                    value={formData.googleFormUrl}
+                    onChange={handleInputChange}
+                    placeholder="https://forms.gle/..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                  />
+                </div>
+
                 {/* Action Buttons */}
                 <div className="flex gap-4 pt-4">
                   <button
@@ -298,6 +376,23 @@ const AdminPublishNoticePage = () => {
                     <div className="text-sm text-gray-700 whitespace-pre-line">
                       {formData.content || 'Notice content will appear here...'}
                     </div>
+
+                    {(pdfFile || formData.googleFormUrl.trim()) && (
+                      <div className="mt-4 space-y-2">
+                        {pdfFile && (
+                          <div className="inline-flex items-center gap-2 text-sm text-[#158c99] bg-[#19aaba]/10 px-3 py-1 rounded-full">
+                            <FileText className="w-4 h-4" />
+                            PDF attached
+                          </div>
+                        )}
+                        {formData.googleFormUrl.trim() && (
+                          <div className="inline-flex items-center gap-2 text-sm text-[#158c99] bg-[#19aaba]/10 px-3 py-1 rounded-full ml-2">
+                            <LinkIcon className="w-4 h-4" />
+                            Google Form added
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Publishing Info */}

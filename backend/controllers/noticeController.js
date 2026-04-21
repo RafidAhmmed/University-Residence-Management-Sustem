@@ -1,11 +1,48 @@
 const Notice = require('../models/Notice');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const noticeUploadDir = path.join(__dirname, '../uploads/notices');
+if (!fs.existsSync(noticeUploadDir)) {
+  fs.mkdirSync(noticeUploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, noticeUploadDir);
+  },
+  filename: (req, file, cb) => {
+    const safeName = file.originalname.replace(/\s+/g, '-');
+    cb(null, `${Date.now()}-${safeName}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF files are allowed'), false);
+    }
+  },
+});
 
 class NoticeController {
+  static uploadNoticePdf = upload.single('pdfFile');
+
   // Create a new notice (admin only)
   async createNotice(req, res) {
     try {
-      const { title, content, type, priority } = req.body;
+      const { title, content, type, priority, googleFormUrl } = req.body;
       const publishedBy = req.user.id; // From auth middleware
+      const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+
+      const normalizedGoogleFormUrl = googleFormUrl?.trim() || null;
 
       const notice = new Notice({
         title,
@@ -13,6 +50,8 @@ class NoticeController {
         type,
         priority,
         publishedBy,
+        googleFormUrl: normalizedGoogleFormUrl,
+        pdfUrl: req.file ? `${baseUrl}/uploads/notices/${req.file.filename}` : null,
       });
 
       await notice.save();
@@ -75,12 +114,29 @@ class NoticeController {
   async updateNotice(req, res) {
     try {
       const { id } = req.params;
-      const { title, content, type, priority, isPublished } = req.body;
+      const { title, content, type, priority, isPublished, googleFormUrl } = req.body;
+      const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+
+      const updateData = {};
+
+      if (title !== undefined) updateData.title = title;
+      if (content !== undefined) updateData.content = content;
+      if (type !== undefined) updateData.type = type;
+      if (priority !== undefined) updateData.priority = priority;
+      if (isPublished !== undefined) updateData.isPublished = isPublished;
+
+      if (googleFormUrl !== undefined) {
+        updateData.googleFormUrl = googleFormUrl.trim() || null;
+      }
+
+      if (req.file) {
+        updateData.pdfUrl = `${baseUrl}/uploads/notices/${req.file.filename}`;
+      }
 
       const notice = await Notice.findByIdAndUpdate(
         id,
-        { title, content, type, priority, isPublished },
-        { new: true }
+        updateData,
+        { new: true, runValidators: true }
       ).populate('publishedBy', 'name');
 
       if (!notice) {
@@ -127,3 +183,4 @@ class NoticeController {
 }
 
 module.exports = new NoticeController();
+module.exports.uploadNoticePdf = NoticeController.uploadNoticePdf;

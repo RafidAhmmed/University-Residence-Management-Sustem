@@ -13,8 +13,8 @@ router.get('/:id', noticeController.getNoticeById);
 router.use(auth);
 
 // Admin routes
-router.post('/', admin, noticeController.createNotice);
-router.put('/:id', admin, noticeController.updateNotice);
+router.post('/', admin, noticeController.uploadNoticePdf, noticeController.createNotice);
+router.put('/:id', admin, noticeController.uploadNoticePdf, noticeController.updateNotice);
 router.delete('/:id', admin, noticeController.deleteNotice);
 router.get('/admin/my', admin, noticeController.getNoticesByAdmin);
 

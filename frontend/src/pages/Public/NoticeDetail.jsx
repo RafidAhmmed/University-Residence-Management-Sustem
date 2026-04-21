@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, User, ArrowLeft, Bell, AlertTriangle, Info, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, User, ArrowLeft, Bell, AlertTriangle, Info, CheckCircle, FileText, ExternalLink } from 'lucide-react';
 import { noticeAPI } from '../../api/noticeApi';
 
 const NoticeDetail = () => {
@@ -53,7 +53,6 @@ const NoticeDetail = () => {
   };
 
   const categories = [
-    { value: 'announcement', label: 'Announcement', color: 'bg-blue-100 text-blue-800' },
     { value: 'maintenance', label: 'Maintenance', color: 'bg-yellow-100 text-yellow-800' },
     { value: 'event', label: 'Events', color: 'bg-purple-100 text-purple-800' },
     { value: 'emergency', label: 'Emergency', color: 'bg-red-100 text-red-800' },
@@ -167,6 +166,34 @@ const NoticeDetail = () => {
                 {notice.content}
               </p>
             </div>
+
+            {(notice.pdfUrl || notice.googleFormUrl) && (
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Additional Resources</h3>
+                <div className="flex flex-wrap gap-3">
+                  {notice.pdfUrl && (
+                    <a
+                      href={notice.pdfUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                    >
+                      <FileText size={16} /> View PDF
+                    </a>
+                  )}
+                  {notice.googleFormUrl && (
+                    <a
+                      href={notice.googleFormUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 text-green-700 hover:bg-green-100"
+                    >
+                      <ExternalLink size={16} /> Open Google Form
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

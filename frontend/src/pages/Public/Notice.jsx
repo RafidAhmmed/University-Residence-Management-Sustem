@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, User, Search, Filter, Bell, AlertTriangle, Info, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, User, Search, Filter, Bell, AlertTriangle, Info, CheckCircle, FileText, ExternalLink } from 'lucide-react';
 import { noticeAPI } from '../../api/noticeApi';
 
 const Notice = () => {
@@ -24,7 +24,9 @@ const Notice = () => {
           date: new Date(notice.publishedAt).toISOString().split('T')[0], // YYYY-MM-DD
           time: new Date(notice.publishedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           author: notice.publishedBy?.name || 'Unknown',
-          attachments: 0 // Assuming no attachments for now
+          pdfUrl: notice.pdfUrl,
+          googleFormUrl: notice.googleFormUrl,
+          attachments: [notice.pdfUrl, notice.googleFormUrl].filter(Boolean).length,
         }));
         setNotices(fetchedNotices);
       } catch (err) {
@@ -40,7 +42,6 @@ const Notice = () => {
 
   const categories = [
     { value: 'all', label: 'All Notices', color: 'bg-gray-100 text-gray-800' },
-    { value: 'announcement', label: 'Announcement', color: 'bg-blue-100 text-blue-800' },
     { value: 'maintenance', label: 'Maintenance', color: 'bg-yellow-100 text-yellow-800' },
     { value: 'event', label: 'Events', color: 'bg-purple-100 text-purple-800' },
     { value: 'emergency', label: 'Emergency', color: 'bg-red-100 text-red-800' },
@@ -91,7 +92,7 @@ const Notice = () => {
               <h1 className="text-4xl md:text-5xl font-bold">Hall Notices</h1>
             </div>
             <p className="text-xl md:text-2xl text-cyan-100 max-w-3xl mx-auto">
-              Stay updated with the latest announcements, important dates, and hall-related information
+              Stay updated with the latest notices, important dates, and hall-related information
             </p>
           </div>
         </div>
@@ -180,6 +181,33 @@ const Notice = () => {
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {notice.content}
                 </p>
+
+                {(notice.pdfUrl || notice.googleFormUrl) && (
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    {notice.pdfUrl && (
+                      <a
+                        href={notice.pdfUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FileText size={12} /> PDF
+                      </a>
+                    )}
+                    {notice.googleFormUrl && (
+                      <a
+                        href={notice.googleFormUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink size={12} /> Form
+                      </a>
+                    )}
+                  </div>
+                )}
 
                 {/* Notice Meta */}
                 <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3">

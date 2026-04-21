@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { Bell, Calendar, User, AlertCircle, Info, CheckCircle, Clock } from 'lucide-react';
+import { Bell, Calendar, User, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { noticeAPI } from '../../api/noticeApi';
 
 const NoticePage = () => {
@@ -31,8 +31,6 @@ const NoticePage = () => {
     switch (type) {
       case 'maintenance':
         return <AlertCircle className="w-5 h-5 text-orange-500" />;
-      case 'announcement':
-        return <Info className="w-5 h-5 text-purple-500" />;
       case 'event':
         return <Calendar className="w-5 h-5 text-green-500" />;
       case 'emergency':
@@ -98,7 +96,7 @@ const NoticePage = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Hall Notices</h1>
-              <p className="text-gray-600">Stay updated with important announcements and information</p>
+              <p className="text-gray-600">Stay updated with important notices and information</p>
             </div>
           </div>
 
@@ -166,6 +164,33 @@ const NoticePage = () => {
                   <p className="text-gray-600 text-sm line-clamp-2">
                     {notice.content.split('\n')[0]}
                   </p>
+
+                  {(notice.pdfUrl || notice.googleFormUrl) && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {notice.pdfUrl && (
+                        <a
+                          href={notice.pdfUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs px-2 py-1 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                        >
+                          PDF
+                        </a>
+                      )}
+                      {notice.googleFormUrl && (
+                        <a
+                          href={notice.googleFormUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100"
+                        >
+                          Form
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -202,6 +227,31 @@ const NoticePage = () => {
                     <div className="text-gray-700 whitespace-pre-line text-sm leading-relaxed">
                       {selectedNotice.content}
                     </div>
+
+                    {(selectedNotice.pdfUrl || selectedNotice.googleFormUrl) && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {selectedNotice.pdfUrl && (
+                          <a
+                            href={selectedNotice.pdfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs px-3 py-2 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                          >
+                            View PDF
+                          </a>
+                        )}
+                        {selectedNotice.googleFormUrl && (
+                          <a
+                            href={selectedNotice.googleFormUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs px-3 py-2 rounded bg-green-50 text-green-700 hover:bg-green-100"
+                          >
+                            Open Form
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

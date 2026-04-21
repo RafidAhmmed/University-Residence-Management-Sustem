@@ -9,7 +9,7 @@ const Footer = () => {
     { to: '/facilities', label: 'Facilities' },
     { to: '/notice', label: 'Notice board' },
     { to: '/contact', label: 'Contact' },
-    { to: '/notice', label: 'Announcements' },
+    { to: '/notice', label: 'Notices' },
   ];
 
   const contactItems = [
@@ -130,7 +130,7 @@ const Footer = () => {
               to="/notice"
               className="text-[11px] sm:text-[12px] lg:text-[14px] text-white/48 hover:text-white/80 transition-colors no-underline"
             >
-              Announcements
+              Notices
             </Link>
           </div>
         </div>
