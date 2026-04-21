@@ -1,6 +1,15 @@
 const authService = require('../services/authService');
 
 class AuthController {
+  async getRegisterOptions(req, res) {
+    try {
+      const options = await authService.getRegisterOptions();
+      res.json(options);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   async requestRegisterOtp(req, res) {
     try {
       await authService.requestRegistrationOtp(req.body);

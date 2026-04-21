@@ -4,6 +4,9 @@ const AuthOtp = require('../models/AuthOtp');
 const emailService = require('./emailService');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const DirectoryOption = require('../models/DirectoryOption');
+const { isValidSession, getSessionOptions } = require('../utils/sessionOptions');
+const { normalizeDepartmentName } = require('../utils/directoryNormalization');
 
 const OTP_EXPIRY_MINUTES = 10;
 
@@ -13,7 +16,52 @@ const hashOtp = (otp) =>
 const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
 class AuthService {
+  async getRegisterOptions() {
+    const [departments, halls] = await Promise.all([
+      DirectoryOption.find({ kind: 'department', isActive: true })
+        .sort({ displayOrder: 1, name: 1 })
+        .select('name code -_id'),
+      DirectoryOption.find({ kind: 'hall', isActive: true })
+        .sort({ displayOrder: 1, name: 1 })
+        .select('name code -_id'),
+    ]);
+
+    return {
+      sessions: getSessionOptions(),
+      departments: departments.map((item) => ({ name: item.name, code: item.code || '' })),
+      halls: halls.map((item) => ({ name: item.name, code: item.code || '' })),
+    };
+  }
+
+  async validateDirectoryFields(userData) {
+    const department = normalizeDepartmentName(userData.department);
+    const hall = String(userData.allocatedHall || '').trim();
+    const session = String(userData.session || '').trim();
+
+    if (!isValidSession(session)) {
+      throw new Error('Invalid session');
+    }
+
+    const [departmentExists, hallExists] = await Promise.all([
+      DirectoryOption.exists({ kind: 'department', isActive: true, name: department }),
+      DirectoryOption.exists({ kind: 'hall', isActive: true, name: hall }),
+    ]);
+
+    if (!departmentExists) {
+      throw new Error('Invalid department');
+    }
+
+    if (!hallExists) {
+      throw new Error('Invalid hall');
+    }
+
+    userData.department = department;
+    userData.allocatedHall = hall;
+    userData.session = session;
+  }
+
   async register(userData) {
+    await this.validateDirectoryFields(userData);
     const user = await userService.createUser(userData);
     return user;
   }
@@ -38,6 +86,8 @@ class AuthService {
         throw new Error(`${field} is required`);
       }
     }
+
+    await this.validateDirectoryFields(userData);
 
     const normalizedEmail = String(userData.email).trim().toLowerCase();
     const existingByEmail = await userService.getUserByEmail(normalizedEmail);

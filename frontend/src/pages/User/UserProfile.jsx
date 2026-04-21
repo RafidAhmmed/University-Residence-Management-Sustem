@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { User, Mail, Shield, Calendar, Edit, Camera, Phone, MapPin, Home, GraduationCap, Building, Droplet } from 'lucide-react';
 import { toast } from 'sonner';
 import { userAPI } from '../../api/userApi';
+import { authAPI } from '../../api/authApi';
 
 const UserProfile = () => {
   const { user, updateUser, fetchUserProfile } = useAuth();
@@ -25,6 +26,7 @@ const UserProfile = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [fixedOptions, setFixedOptions] = useState({ sessions: [], departments: [], halls: [] });
 
   // Check if profile is locked (not first-time setup)
   const isProfileLocked = user && (
@@ -71,6 +73,23 @@ const UserProfile = () => {
     if (user && user.id) {
       loadUserProfile();
     }
+  }, []);
+
+  useEffect(() => {
+    const loadFixedOptions = async () => {
+      try {
+        const response = await authAPI.getRegisterOptions();
+        setFixedOptions({
+          sessions: response.data?.sessions || [],
+          departments: response.data?.departments || [],
+          halls: response.data?.halls || [],
+        });
+      } catch (error) {
+        console.error('Failed to load fixed options:', error);
+      }
+    };
+
+    loadFixedOptions();
   }, []);
 
   const handleChange = (e) => {
@@ -321,30 +340,36 @@ const UserProfile = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Session
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="session"
                       value={formData.session}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
-                      placeholder="e.g., 2020-2021"
                       disabled={isProfileLocked}
-                    />
+                    >
+                      <option value="">Select Session</option>
+                      {fixedOptions.sessions.map((session) => (
+                        <option key={session} value={session}>{session}</option>
+                      ))}
+                    </select>
                     {isProfileLocked && <p className="text-xs text-gray-500 mt-1">Contact admin to change</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Department
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="department"
                       value={formData.department}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
-                      placeholder="e.g., Computer Science"
                       disabled={isProfileLocked}
-                    />
+                    >
+                      <option value="">Select Department</option>
+                      {fixedOptions.departments.map((department) => (
+                        <option key={department.name} value={department.name}>{department.name}</option>
+                      ))}
+                    </select>
                     {isProfileLocked && <p className="text-xs text-gray-500 mt-1">Contact admin to change</p>}
                   </div>
                   <div>
@@ -366,15 +391,18 @@ const UserProfile = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Allocated Hall
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="allocatedHall"
                       value={formData.allocatedHall}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
-                      placeholder="Hall name"
                       disabled
-                    />
+                    >
+                      <option value="">Select Hall</option>
+                      {fixedOptions.halls.map((hall) => (
+                        <option key={hall.name} value={hall.name}>{hall.name}</option>
+                      ))}
+                    </select>
                     <p className="text-xs text-gray-500 mt-1">Contact admin to change hall allocation</p>
                   </div>
                   <div>

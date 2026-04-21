@@ -33,11 +33,35 @@ const Login = () => {
     department: "",
     bloodGroup: "",
     homeTown: "",
-    allocatedHall: "Pending Allocation",
+    allocatedHall: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [registerOptions, setRegisterOptions] = useState({ sessions: [], departments: [], halls: [] });
+  const [optionsLoading, setOptionsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchRegisterOptions = async () => {
+      if (!isRegister) return;
+      setOptionsLoading(true);
+      try {
+        const response = await authAPI.getRegisterOptions();
+        setRegisterOptions({
+          sessions: response.data?.sessions || [],
+          departments: response.data?.departments || [],
+          halls: response.data?.halls || [],
+        });
+      } catch (error) {
+        console.error('Failed to load register options:', error);
+        toast.error('Failed to load session/department/hall options');
+      } finally {
+        setOptionsLoading(false);
+      }
+    };
+
+    fetchRegisterOptions();
+  }, [isRegister]);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -98,6 +122,10 @@ const Login = () => {
         newErrors.department = "Department is required";
       }
 
+      if (!formData.allocatedHall.trim()) {
+        newErrors.allocatedHall = "Hall is required";
+      }
+
       if (!formData.bloodGroup) {
         newErrors.bloodGroup = "Blood group is required";
       }
@@ -151,7 +179,7 @@ const Login = () => {
           session: formData.session.trim(),
           department: formData.department.trim(),
           homeTown: formData.homeTown.trim(),
-          allocatedHall: formData.allocatedHall || "Pending Allocation",
+          allocatedHall: formData.allocatedHall,
         };
 
         await authAPI.requestRegisterOtp(registerData);
@@ -237,7 +265,7 @@ const Login = () => {
                       department: "",
                       bloodGroup: "",
                       homeTown: "",
-                      allocatedHall: "Pending Allocation",
+                      allocatedHall: "",
                     });
                   }}
                   className="text-[#19aaba] hover:text-[#17a2b8] text-sm font-medium"
@@ -352,17 +380,21 @@ const Login = () => {
                       >
                         Session
                       </label>
-                      <input
+                      <select
                         id="session"
                         name="session"
-                        type="text"
-                        placeholder="e.g., 2022-23"
                         value={formData.session}
                         onChange={handleChange}
                         className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
                           errors.session ? "border-red-500" : "border-gray-300"
                         }`}
-                      />
+                        disabled={optionsLoading}
+                      >
+                        <option value="">Select Session</option>
+                        {registerOptions.sessions.map((session) => (
+                          <option key={session} value={session}>{session}</option>
+                        ))}
+                      </select>
                       {errors.session && (
                         <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.session}</p>
                       )}
@@ -375,17 +407,21 @@ const Login = () => {
                       >
                         Department
                       </label>
-                      <input
+                      <select
                         id="department"
                         name="department"
-                        type="text"
-                        placeholder="e.g., CSE"
                         value={formData.department}
                         onChange={handleChange}
                         className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
                           errors.department ? "border-red-500" : "border-gray-300"
                         }`}
-                      />
+                        disabled={optionsLoading}
+                      >
+                        <option value="">Select Department</option>
+                        {registerOptions.departments.map((department) => (
+                          <option key={department.name} value={department.name}>{department.name}</option>
+                        ))}
+                      </select>
                       {errors.department && (
                         <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.department}</p>
                       )}
@@ -419,6 +455,33 @@ const Login = () => {
                       </select>
                       {errors.bloodGroup && (
                         <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.bloodGroup}</p>
+                      )}
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="allocatedHall"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Hall
+                      </label>
+                      <select
+                        id="allocatedHall"
+                        name="allocatedHall"
+                        value={formData.allocatedHall}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 ${
+                          errors.allocatedHall ? "border-red-500" : "border-gray-300"
+                        }`}
+                        disabled={optionsLoading}
+                      >
+                        <option value="">Select Hall</option>
+                        {registerOptions.halls.map((hall) => (
+                          <option key={hall.name} value={hall.name}>{hall.name}</option>
+                        ))}
+                      </select>
+                      {errors.allocatedHall && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.allocatedHall}</p>
                       )}
                     </div>
 

@@ -1,6 +1,9 @@
 const userService = require('../services/userService');
 const cloudinary = require('../config/cloudinary');
 const multer = require('multer');
+const DirectoryOption = require('../models/DirectoryOption');
+const { isValidSession } = require('../utils/sessionOptions');
+const { normalizeDepartmentName } = require('../utils/directoryNormalization');
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
@@ -17,6 +20,41 @@ const upload = multer({
     }
   },
 });
+
+const validateFixedFields = async (payload) => {
+  if (payload.session !== undefined && payload.session !== null && String(payload.session).trim() !== '') {
+    payload.session = String(payload.session).trim();
+    if (!isValidSession(payload.session)) {
+      throw new Error('Invalid session');
+    }
+  }
+
+  if (payload.department !== undefined && payload.department !== null && String(payload.department).trim() !== '') {
+    payload.department = normalizeDepartmentName(payload.department);
+    const exists = await DirectoryOption.exists({
+      kind: 'department',
+      isActive: true,
+      name: payload.department,
+    });
+
+    if (!exists) {
+      throw new Error('Invalid department');
+    }
+  }
+
+  if (payload.allocatedHall !== undefined && payload.allocatedHall !== null && String(payload.allocatedHall).trim() !== '') {
+    payload.allocatedHall = String(payload.allocatedHall).trim();
+    const exists = await DirectoryOption.exists({
+      kind: 'hall',
+      isActive: true,
+      name: payload.allocatedHall,
+    });
+
+    if (!exists) {
+      throw new Error('Invalid hall');
+    }
+  }
+};
 
 class UserController {
   // Static method for multer middleware
@@ -90,6 +128,8 @@ class UserController {
         }
       });
 
+      await validateFixedFields(filteredData);
+
       const user = await userService.updateUser(req.params.id, filteredData);
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
@@ -130,6 +170,8 @@ class UserController {
       }
 
       let profileData = { ...req.body };
+
+      await validateFixedFields(profileData);
 
       // Handle profile picture upload to Cloudinary
       if (req.file) {

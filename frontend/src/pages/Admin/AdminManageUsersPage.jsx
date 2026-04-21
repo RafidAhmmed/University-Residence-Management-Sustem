@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Users, Search, Filter, Download, Trash2, Shield, User, RefreshCw, Pencil, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { userAPI } from '../../api/userApi';
+import { authAPI } from '../../api/authApi';
 import ConfirmModal from '../../components/Common/ConfirmModal';
 
 const AdminManageUsersPage = () => {
@@ -9,13 +10,14 @@ const AdminManageUsersPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
-  const [departmentFilter, setDepartmentFilter] = useState('all');
-  const [hallFilter, setHallFilter] = useState('all');
-  const [sessionFilter, setSessionFilter] = useState('all');
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [hallFilter, setHallFilter] = useState('');
+  const [sessionFilter, setSessionFilter] = useState('');
   const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
   const [updatingRoleUserId, setUpdatingRoleUserId] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [fixedOptions, setFixedOptions] = useState({ sessions: [], departments: [], halls: [] });
   const [editForm, setEditForm] = useState({
     name: '',
     studentId: '',
@@ -48,18 +50,26 @@ const AdminManageUsersPage = () => {
     fetchUsers();
   }, []);
 
-  const departments = useMemo(
-    () => [...new Set(users.map((user) => user.department).filter(Boolean))].sort(),
-    [users]
-  );
-  const halls = useMemo(
-    () => [...new Set(users.map((user) => user.allocatedHall).filter(Boolean))].sort(),
-    [users]
-  );
-  const sessions = useMemo(
-    () => [...new Set(users.map((user) => user.session).filter(Boolean))].sort(),
-    [users]
-  );
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const response = await authAPI.getRegisterOptions();
+        setFixedOptions({
+          sessions: response.data?.sessions || [],
+          departments: response.data?.departments || [],
+          halls: response.data?.halls || [],
+        });
+      } catch (error) {
+        console.error('Error loading fixed options:', error);
+      }
+    };
+
+    fetchOptions();
+  }, []);
+
+  const departments = useMemo(() => fixedOptions.departments.map((item) => item.name), [fixedOptions.departments]);
+  const halls = useMemo(() => fixedOptions.halls.map((item) => item.name), [fixedOptions.halls]);
+  const sessions = useMemo(() => fixedOptions.sessions, [fixedOptions.sessions]);
 
   const filteredUsers = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
@@ -73,9 +83,9 @@ const AdminManageUsersPage = () => {
         user.phone?.toLowerCase().includes(q);
 
       const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-      const matchesDepartment = departmentFilter === 'all' || user.department === departmentFilter;
-      const matchesHall = hallFilter === 'all' || user.allocatedHall === hallFilter;
-      const matchesSession = sessionFilter === 'all' || user.session === sessionFilter;
+      const matchesDepartment = !departmentFilter || user.department === departmentFilter;
+      const matchesHall = !hallFilter || user.allocatedHall === hallFilter;
+      const matchesSession = !sessionFilter || user.session === sessionFilter;
 
       return matchesSearch && matchesRole && matchesDepartment && matchesHall && matchesSession;
     });
@@ -338,44 +348,59 @@ const AdminManageUsersPage = () => {
               <option value="user">User</option>
             </select>
 
-            <select
+            <input
+              list="department-filter-options"
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
+              placeholder="All Departments"
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
-            >
-              <option value="all">All Departments</option>
+            />
+            <datalist id="department-filter-options">
               {departments.map((department) => (
-                <option key={department} value={department}>
-                  {department}
-                </option>
+                <option key={department} value={department} />
               ))}
-            </select>
+            </datalist>
 
-            <select
+            <input
+              list="hall-filter-options"
               value={hallFilter}
               onChange={(e) => setHallFilter(e.target.value)}
+              placeholder="All Halls"
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
-            >
-              <option value="all">All Halls</option>
+            />
+            <datalist id="hall-filter-options">
               {halls.map((hall) => (
-                <option key={hall} value={hall}>
-                  {hall}
-                </option>
+                <option key={hall} value={hall} />
               ))}
-            </select>
+            </datalist>
 
-            <select
+            <input
+              list="session-filter-options"
               value={sessionFilter}
               onChange={(e) => setSessionFilter(e.target.value)}
+              placeholder="All Sessions"
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
-            >
-              <option value="all">All Sessions</option>
+            />
+            <datalist id="session-filter-options">
               {sessions.map((session) => (
-                <option key={session} value={session}>
-                  {session}
-                </option>
+                <option key={session} value={session} />
               ))}
-            </select>
+            </datalist>
+
+            <button
+              type="button"
+              onClick={() => {
+                setRoleFilter('all');
+                setDepartmentFilter('');
+                setHallFilter('');
+                setSessionFilter('');
+                setSearchTerm('');
+              }}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+            >
+              Clear
+            </button>
+
           </div>
         </div>
 
@@ -521,11 +546,35 @@ const AdminManageUsersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                  <input name="department" value={editForm.department} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input
+                    list="department-edit-options"
+                    name="department"
+                    value={editForm.department}
+                    onChange={handleEditInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    placeholder="Select Department"
+                  />
+                  <datalist id="department-edit-options">
+                    {departments.map((department) => (
+                      <option key={department} value={department} />
+                    ))}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Session</label>
-                  <input name="session" value={editForm.session} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input
+                    list="session-edit-options"
+                    name="session"
+                    value={editForm.session}
+                    onChange={handleEditInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    placeholder="Select Session"
+                  />
+                  <datalist id="session-edit-options">
+                    {sessions.map((session) => (
+                      <option key={session} value={session} />
+                    ))}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
@@ -543,7 +592,19 @@ const AdminManageUsersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Allocated Hall</label>
-                  <input name="allocatedHall" value={editForm.allocatedHall} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input
+                    list="hall-edit-options"
+                    name="allocatedHall"
+                    value={editForm.allocatedHall}
+                    onChange={handleEditInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    placeholder="Select Hall"
+                  />
+                  <datalist id="hall-edit-options">
+                    {halls.map((hall) => (
+                      <option key={hall} value={hall} />
+                    ))}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Allocated Room</label>
