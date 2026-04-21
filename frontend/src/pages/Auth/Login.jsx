@@ -25,6 +25,14 @@ const Login = () => {
     studentId: "",
     password: "",
     name: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    session: "",
+    department: "",
+    bloodGroup: "",
+    homeTown: "",
+    allocatedHall: "Pending Allocation",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -66,6 +74,36 @@ const Login = () => {
       } else if (formData.name.trim().length < 2) {
         newErrors.name = "Name must be at least 2 characters";
       }
+
+      if (!formData.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+        newErrors.email = "Enter a valid email address";
+      }
+
+      if (!formData.phone.trim()) {
+        newErrors.phone = "Phone number is required";
+      }
+
+      if (!formData.dateOfBirth) {
+        newErrors.dateOfBirth = "Date of birth is required";
+      }
+
+      if (!formData.session.trim()) {
+        newErrors.session = "Session is required";
+      }
+
+      if (!formData.department.trim()) {
+        newErrors.department = "Department is required";
+      }
+
+      if (!formData.bloodGroup) {
+        newErrors.bloodGroup = "Blood group is required";
+      }
+
+      if (!formData.homeTown.trim()) {
+        newErrors.homeTown = "Home town is required";
+      }
     }
 
     // Validate Student ID
@@ -103,10 +141,34 @@ const Login = () => {
 
     try {
       if (isRegister) {
-        await register(formData);
+        const registerData = {
+          ...formData,
+          name: formData.name.trim(),
+          studentId: formData.studentId.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          session: formData.session.trim(),
+          department: formData.department.trim(),
+          homeTown: formData.homeTown.trim(),
+          allocatedHall: formData.allocatedHall || "Pending Allocation",
+        };
+
+        await register(registerData);
         toast.success("Registration successful! Please login.");
         setIsRegister(false);
-        setFormData({ studentId: formData.studentId, password: "", name: "" });
+        setFormData({
+          studentId: formData.studentId,
+          password: "",
+          name: "",
+          email: "",
+          phone: "",
+          dateOfBirth: "",
+          session: "",
+          department: "",
+          bloodGroup: "",
+          homeTown: "",
+          allocatedHall: "Pending Allocation",
+        });
       } else {
         const response = await login(formData);
         toast.success("Login successful!");
@@ -171,7 +233,19 @@ const Login = () => {
                   onClick={() => {
                     setIsRegister(!isRegister);
                     setErrors({});
-                    setFormData({ studentId: "", password: "", name: "" });
+                    setFormData({
+                      studentId: "",
+                      password: "",
+                      name: "",
+                      email: "",
+                      phone: "",
+                      dateOfBirth: "",
+                      session: "",
+                      department: "",
+                      bloodGroup: "",
+                      homeTown: "",
+                      allocatedHall: "Pending Allocation",
+                    });
                   }}
                   className="text-[#19aaba] hover:text-[#17a2b8] text-sm font-medium"
                 >
@@ -205,6 +279,178 @@ const Login = () => {
                     {errors.name && (
                       <p className="mt-1 text-sm text-red-600">{errors.name}</p>
                     )}
+                  </div>
+                )}
+
+                {isRegister && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Email
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
+                          errors.email ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.email && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.email}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Phone Number
+                      </label>
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="text"
+                        placeholder="e.g., 01XXXXXXXXX"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
+                          errors.phone ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.phone && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.phone}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="dateOfBirth"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Date of Birth
+                      </label>
+                      <input
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        type="date"
+                        value={formData.dateOfBirth}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 ${
+                          errors.dateOfBirth ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.dateOfBirth && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.dateOfBirth}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="session"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Session
+                      </label>
+                      <input
+                        id="session"
+                        name="session"
+                        type="text"
+                        placeholder="e.g., 2022-23"
+                        value={formData.session}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
+                          errors.session ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.session && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.session}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="department"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Department
+                      </label>
+                      <input
+                        id="department"
+                        name="department"
+                        type="text"
+                        placeholder="e.g., CSE"
+                        value={formData.department}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
+                          errors.department ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.department && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.department}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="bloodGroup"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Blood Group
+                      </label>
+                      <select
+                        id="bloodGroup"
+                        name="bloodGroup"
+                        value={formData.bloodGroup}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 ${
+                          errors.bloodGroup ? "border-red-500" : "border-gray-300"
+                        }`}
+                      >
+                        <option value="">Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </select>
+                      {errors.bloodGroup && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.bloodGroup}</p>
+                      )}
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="homeTown"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Home Town
+                      </label>
+                      <input
+                        id="homeTown"
+                        name="homeTown"
+                        type="text"
+                        placeholder="Enter your home town"
+                        value={formData.homeTown}
+                        onChange={handleChange}
+                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
+                          errors.homeTown ? "border-red-500" : "border-gray-300"
+                        }`}
+                      />
+                      {errors.homeTown && (
+                        <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.homeTown}</p>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -282,28 +528,30 @@ const Login = () => {
                 </div>
 
                 {/* Remember me and Forgot Password */}
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-[#19aaba] focus:ring-[#19aaba] border-gray-300 rounded cursor-pointer"
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-2 block text-xs sm:text-sm text-gray-700 cursor-pointer"
+                {!isRegister && (
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center">
+                      <input
+                        id="remember-me"
+                        name="remember-me"
+                        type="checkbox"
+                        className="h-4 w-4 text-[#19aaba] focus:ring-[#19aaba] border-gray-300 rounded cursor-pointer"
+                      />
+                      <label
+                        htmlFor="remember-me"
+                        className="ml-2 block text-xs sm:text-sm text-gray-700 cursor-pointer"
+                      >
+                        Remember me
+                      </label>
+                    </div>
+                    <Link
+                      to="/forgot-password"
+                      className="text-xs sm:text-sm font-medium text-[#19aaba] hover:text-[#158c99] transition-colors duration-200"
                     >
-                      Remember me
-                    </label>
+                      Forgot password?
+                    </Link>
                   </div>
-                  <Link
-                    to="/forgot-password"
-                    className="text-xs sm:text-sm font-medium text-[#19aaba] hover:text-[#158c99] transition-colors duration-200"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                )}
 
                 {/* Submit Error */}
                 {errors.submit && (
