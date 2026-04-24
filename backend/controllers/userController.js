@@ -4,6 +4,11 @@ const multer = require('multer');
 const DirectoryOption = require('../models/DirectoryOption');
 const { isValidSession } = require('../utils/sessionOptions');
 const { normalizeDepartmentName } = require('../utils/directoryNormalization');
+const {
+  buildStudentEmail,
+  normalizeStudentEmail,
+  normalizeStudentId,
+} = require('../utils/studentAccount');
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
@@ -53,6 +58,35 @@ const validateFixedFields = async (payload) => {
     if (!exists) {
       throw new Error('Invalid hall');
     }
+  }
+};
+
+const validateStudentAccountEmail = async (userData) => {
+  if (userData.role !== 'user') {
+    return;
+  }
+
+  const studentId = normalizeStudentId(userData.studentId);
+  const email = normalizeStudentEmail(userData.email);
+  const department = normalizeDepartmentName(userData.department);
+
+  if (!/^\d{6,8}$/.test(studentId)) {
+    throw new Error('Student ID must be 6-8 digits');
+  }
+
+  const departmentOption = await DirectoryOption.findOne({
+    kind: 'department',
+    isActive: true,
+    name: department,
+  }).select('code');
+
+  if (!departmentOption || !departmentOption.code) {
+    throw new Error('Department code not found');
+  }
+
+  const expectedEmail = buildStudentEmail(studentId, departmentOption.code);
+  if (email !== expectedEmail) {
+    throw new Error(`Student email must be ${expectedEmail}`);
   }
 };
 
@@ -110,6 +144,7 @@ class UserController {
         'name',
         'studentId',
         'email',
+        'gender',
         'phone',
         'role',
         'dateOfBirth',
@@ -129,6 +164,19 @@ class UserController {
       });
 
       await validateFixedFields(filteredData);
+
+      const existingUser = await userService.getUserById(req.params.id);
+      if (!existingUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const nextUserData = {
+        ...existingUser.toObject(),
+        ...filteredData,
+        role: filteredData.role || existingUser.role,
+      };
+
+      await validateStudentAccountEmail(nextUserData);
 
       const user = await userService.updateUser(req.params.id, filteredData);
       if (!user) {
@@ -172,6 +220,16 @@ class UserController {
       let profileData = { ...req.body };
 
       await validateFixedFields(profileData);
+
+      const existingUser = await userService.getUserById(userId);
+      if (!existingUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      await validateStudentAccountEmail({
+        ...existingUser.toObject(),
+        ...profileData,
+      });
 
       // Handle profile picture upload to Cloudinary
       if (req.file) {

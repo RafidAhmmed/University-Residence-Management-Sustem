@@ -16,6 +16,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
 import { authAPI } from "../../api/authApi";
 
+const STUDENT_EMAIL_DOMAIN = "student.just.edu.bd";
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +29,7 @@ const Login = () => {
     password: "",
     name: "",
     email: "",
+    gender: "",
     phone: "",
     dateOfBirth: "",
     session: "",
@@ -102,8 +105,21 @@ const Login = () => {
 
       if (!formData.email.trim()) {
         newErrors.email = "Email is required";
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-        newErrors.email = "Enter a valid email address";
+      } else if (!formData.department.trim()) {
+        newErrors.email = "Select a department first";
+      } else if (/^\d{6,8}$/.test(formData.studentId.trim())) {
+        const selectedDepartment = registerOptions.departments.find(
+          (department) => department.name === formData.department.trim()
+        );
+        const departmentCode = String(selectedDepartment?.code || "").trim().toLowerCase();
+        const studentId = formData.studentId.trim();
+        const expectedEmail = `${studentId}.${departmentCode}@${STUDENT_EMAIL_DOMAIN}`;
+
+        if (!departmentCode) {
+          newErrors.email = "Department code is missing for the selected department";
+        } else if (formData.email.trim().toLowerCase() !== expectedEmail) {
+          newErrors.email = `Use your varsity email: ${expectedEmail}`;
+        }
       }
 
       if (!formData.phone.trim()) {
@@ -132,6 +148,10 @@ const Login = () => {
 
       if (!formData.homeTown.trim()) {
         newErrors.homeTown = "Home town is required";
+      }
+
+      if (!formData.gender) {
+        newErrors.gender = "Gender is required";
       }
     }
 
@@ -175,6 +195,7 @@ const Login = () => {
           name: formData.name.trim(),
           studentId: formData.studentId.trim(),
           email: formData.email.trim().toLowerCase(),
+          gender: formData.gender,
           phone: formData.phone.trim(),
           session: formData.session.trim(),
           department: formData.department.trim(),
@@ -259,6 +280,7 @@ const Login = () => {
                       password: "",
                       name: "",
                       email: "",
+                      gender: "",
                       phone: "",
                       dateOfBirth: "",
                       session: "",
@@ -316,7 +338,7 @@ const Login = () => {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="200107.cse@student.just.edu.bd"
                         value={formData.email}
                         onChange={handleChange}
                         className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 ${
@@ -327,6 +349,33 @@ const Login = () => {
                         <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.email}</p>
                       )}
                     </div>
+
+                      <div>
+                        <label
+                          htmlFor="gender"
+                          className="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                          Gender
+                        </label>
+                        <select
+                          id="gender"
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleChange}
+                          className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border rounded-xl focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-all duration-200 text-gray-900 ${
+                            errors.gender ? "border-red-500" : "border-gray-300"
+                          }`}
+                        >
+                          <option value="">Select Gender</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                          <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                        {errors.gender && (
+                          <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.gender}</p>
+                        )}
+                      </div>
 
                     <div>
                       <label
@@ -526,7 +575,7 @@ const Login = () => {
                       id="studentId"
                       name="studentId"
                       type="text"
-                      placeholder="Enter your Student ID (e.g., 20012001)"
+                      placeholder="Enter your Student ID (e.g., 200107)"
                       value={formData.studentId}
                       onChange={handleChange}
                       className={`block w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base border ${
@@ -537,6 +586,11 @@ const Login = () => {
                   {errors.studentId && (
                     <p className="mt-2 text-xs sm:text-sm text-red-600">
                       {errors.studentId}
+                    </p>
+                  )}
+                  {isRegister && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Use this format: studentId.departmentCode@{STUDENT_EMAIL_DOMAIN}
                     </p>
                   )}
                 </div>

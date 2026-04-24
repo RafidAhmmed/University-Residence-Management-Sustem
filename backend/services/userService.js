@@ -59,7 +59,7 @@ class UserService {
   async updateUserProfile(id, profileData) {
     // Define allowed profile fields
     const allowedFields = [
-      'name', 'email', 'phone', 'dateOfBirth', 'session', 'department',
+      'name', 'email', 'gender', 'phone', 'dateOfBirth', 'session', 'department',
       'bloodGroup', 'homeTown', 'profilePicture'
     ];
 

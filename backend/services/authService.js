@@ -7,6 +7,11 @@ const crypto = require('crypto');
 const DirectoryOption = require('../models/DirectoryOption');
 const { isValidSession, getSessionOptions } = require('../utils/sessionOptions');
 const { normalizeDepartmentName } = require('../utils/directoryNormalization');
+const {
+  buildStudentEmail,
+  normalizeStudentEmail,
+  normalizeStudentId,
+} = require('../utils/studentAccount');
 
 const OTP_EXPIRY_MINUTES = 10;
 
@@ -60,17 +65,46 @@ class AuthService {
     userData.session = session;
   }
 
-  async register(userData) {
-    await this.validateDirectoryFields(userData);
-    const user = await userService.createUser(userData);
-    return user;
+  async validateStudentAccountEmail(userData) {
+    const normalizedStudentId = normalizeStudentId(userData.studentId);
+    const normalizedEmail = normalizeStudentEmail(userData.email);
+    const department = normalizeDepartmentName(userData.department);
+
+    if (!/^\d{6,8}$/.test(normalizedStudentId)) {
+      throw new Error('Student ID must be 6-8 digits');
+    }
+
+    const departmentOption = await DirectoryOption.findOne({
+      kind: 'department',
+      isActive: true,
+      name: department,
+    }).select('code');
+
+    if (!departmentOption || !departmentOption.code) {
+      throw new Error('Department code not found');
+    }
+
+    const expectedEmail = buildStudentEmail(normalizedStudentId, departmentOption.code);
+
+    if (normalizedEmail !== expectedEmail) {
+      throw new Error(`Student email must be ${expectedEmail}`);
+    }
+
+    userData.studentId = normalizedStudentId;
+    userData.email = normalizedEmail;
   }
 
-  async requestRegistrationOtp(userData) {
+  async validateStudentRegistration(userData) {
+    await this.validateDirectoryFields(userData);
+    await this.validateStudentAccountEmail(userData);
+  }
+
+  async register(userData) {
     const requiredFields = [
       'name',
       'studentId',
       'email',
+      'gender',
       'phone',
       'password',
       'dateOfBirth',
@@ -87,16 +121,43 @@ class AuthService {
       }
     }
 
-    await this.validateDirectoryFields(userData);
+    await this.validateStudentRegistration(userData);
+    const user = await userService.createUser(userData);
+    return user;
+  }
 
-    const normalizedEmail = String(userData.email).trim().toLowerCase();
+  async requestRegistrationOtp(userData) {
+    const requiredFields = [
+      'name',
+      'studentId',
+      'email',
+      'gender',
+      'phone',
+      'password',
+      'dateOfBirth',
+      'session',
+      'department',
+      'bloodGroup',
+      'homeTown',
+      'allocatedHall',
+    ];
+
+    for (const field of requiredFields) {
+      if (!userData[field]) {
+        throw new Error(`${field} is required`);
+      }
+    }
+
+    await this.validateStudentRegistration(userData);
+
+    const normalizedEmail = normalizeStudentEmail(userData.email);
     const existingByEmail = await userService.getUserByEmail(normalizedEmail);
     if (existingByEmail) {
       throw new Error('Email is already registered');
     }
 
     const existingByStudentId = await userService.getUserByStudentId(
-      String(userData.studentId).trim()
+      normalizeStudentId(userData.studentId)
     );
     if (existingByStudentId) {
       throw new Error('Student ID is already registered');
@@ -116,7 +177,7 @@ class AuthService {
       payload: {
         ...userData,
         email: normalizedEmail,
-        studentId: String(userData.studentId).trim(),
+        studentId: normalizeStudentId(userData.studentId),
       },
     });
 

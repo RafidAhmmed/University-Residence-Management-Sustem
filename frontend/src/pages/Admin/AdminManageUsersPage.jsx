@@ -22,6 +22,7 @@ const AdminManageUsersPage = () => {
     name: '',
     studentId: '',
     email: '',
+    gender: '',
     phone: '',
     role: 'user',
     department: '',
@@ -143,6 +144,7 @@ const AdminManageUsersPage = () => {
       name: user.name || '',
       studentId: user.studentId || '',
       email: user.email || '',
+      gender: user.gender || '',
       phone: user.phone || '',
       role: user.role || 'user',
       department: user.department || '',
@@ -181,6 +183,7 @@ const AdminManageUsersPage = () => {
         name: editForm.name.trim(),
         studentId: editForm.studentId.trim(),
         email: editForm.email.trim(),
+        gender: editForm.gender,
         phone: editForm.phone.trim(),
         role: editForm.role,
         department: editForm.department.trim(),
@@ -219,6 +222,7 @@ const AdminManageUsersPage = () => {
       'Name',
       'Student ID',
       'Email',
+      'Gender',
       'Phone',
       'Role',
       'Department',
@@ -232,6 +236,7 @@ const AdminManageUsersPage = () => {
       user.name,
       user.studentId,
       user.email,
+      user.gender,
       user.phone,
       user.role,
       user.department,
@@ -532,6 +537,16 @@ const AdminManageUsersPage = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input type="email" name="email" value={editForm.email} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                  <select name="gender" value={editForm.gender} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
