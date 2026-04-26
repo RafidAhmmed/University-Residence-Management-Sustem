@@ -75,7 +75,7 @@ function App() {
           </Route>
 
           {/* 404 Route */}
-          <Route path="*" element={<div className="p-8 text-center min-h-screen flex items-center justify-center bg-gray-100"><h1 className="text-2xl font-bold text-gray-800">404 - Page Not Found</h1></div>} />
+          <Route path="*" element={<div className="p-8 text-center min-h-screen flex items-center justify-center bg-surface"><h1 className="text-2xl font-bold text-primary font-heading">404 - Page Not Found</h1></div>} />
         </Routes>
       </Router>
     </AuthProvider>

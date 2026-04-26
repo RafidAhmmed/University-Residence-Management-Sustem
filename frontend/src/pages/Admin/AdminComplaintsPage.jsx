@@ -164,10 +164,10 @@ const AdminComplaintsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-surface py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             <span className="ml-3 text-gray-600">Loading complaints...</span>
           </div>
         </div>
@@ -176,12 +176,12 @@ const AdminComplaintsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-[#19aaba] text-white p-3 rounded-full">
+            <div className="bg-primary text-white p-3 rounded-full">
               <MessageSquare className="w-6 h-6" />
             </div>
             <div>
@@ -222,7 +222,7 @@ const AdminComplaintsPage = () => {
                   placeholder="Search complaints..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
                 />
               </div>
             </div>
@@ -230,7 +230,7 @@ const AdminComplaintsPage = () => {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -249,7 +249,7 @@ const AdminComplaintsPage = () => {
               <div
                 key={complaint._id}
                 className={`bg-white rounded-lg shadow-sm border cursor-pointer transition-all duration-200 hover:shadow-md ${
-                  selectedComplaint?._id === complaint._id ? 'ring-2 ring-[#19aaba]' : 'border-gray-200'
+                  selectedComplaint?._id === complaint._id ? 'ring-2 ring-[#1d3557]' : 'border-gray-200'
                 }`}
                 onClick={() => setSelectedComplaint(complaint)}
               >
@@ -391,7 +391,7 @@ const AdminComplaintsPage = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <h3 className="font-semibold text-gray-900 mb-3">Admin Response</h3>
                     {selectedComplaint.adminResponse ? (
-                      <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="bg-surface p-3 rounded-lg">
                         <p className="text-gray-700 text-sm">{selectedComplaint.adminResponse}</p>
                         <p className="text-xs text-gray-500 mt-2">
                           Responded on {formatDate(selectedComplaint.responseDate)}
@@ -403,12 +403,12 @@ const AdminComplaintsPage = () => {
                           value={responseText}
                           onChange={(e) => setResponseText(e.target.value)}
                           placeholder="Enter your response..."
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent resize-none"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
                           rows="4"
                         />
                         <button
                           onClick={() => submitResponse(selectedComplaint._id)}
-                          className="w-full bg-[#19aaba] text-white py-2 px-4 rounded-lg hover:bg-[#17a0a8] transition-colors flex items-center justify-center gap-2"
+                          className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-[#17a0a8] transition-colors flex items-center justify-center gap-2"
                         >
                           <Reply className="w-4 h-4" />
                           Submit Response

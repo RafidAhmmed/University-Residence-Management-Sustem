@@ -219,12 +219,12 @@ const AdminPublishNoticePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-[#19aaba] text-white p-3 rounded-full">
+            <div className="bg-primary text-white p-3 rounded-full">
               <Bell className="w-6 h-6" />
             </div>
             <div>
@@ -239,7 +239,7 @@ const AdminPublishNoticePage = () => {
               onClick={() => setActiveTab('publish')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                 activeTab === 'publish'
-                  ? 'bg-white text-[#19aaba] shadow-sm'
+                  ? 'bg-white text-primary shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -250,7 +250,7 @@ const AdminPublishNoticePage = () => {
               onClick={() => setActiveTab('history')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                 activeTab === 'history'
-                  ? 'bg-white text-[#19aaba] shadow-sm'
+                  ? 'bg-white text-primary shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -276,7 +276,7 @@ const AdminPublishNoticePage = () => {
                     value={formData.title}
                     onChange={handleInputChange}
                     placeholder="Enter notice title..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
                 </div>
@@ -294,11 +294,11 @@ const AdminPublishNoticePage = () => {
                         onClick={() => handleTypeChange(type.value)}
                         className={`flex items-center gap-3 p-3 border rounded-lg transition-all ${
                           formData.type === type.value
-                            ? 'border-[#19aaba] bg-[#19aaba]/5 text-[#19aaba]'
+                            ? 'border-primary bg-primary/5 text-primary'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <span className={formData.type === type.value ? 'text-[#19aaba]' : 'text-gray-500'}>
+                        <span className={formData.type === type.value ? 'text-primary' : 'text-gray-500'}>
                           {type.icon}
                         </span>
                         <span className="text-sm font-medium">{type.label}</span>
@@ -320,7 +320,7 @@ const AdminPublishNoticePage = () => {
                         onClick={() => handlePriorityChange(priority.value)}
                         className={`px-4 py-2 text-sm font-medium rounded-lg border transition-all ${
                           formData.priority === priority.value
-                            ? 'border-[#19aaba] bg-[#19aaba]/5 text-[#19aaba]'
+                            ? 'border-primary bg-primary/5 text-primary'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -339,7 +339,7 @@ const AdminPublishNoticePage = () => {
                     name="hall"
                     value={formData.hall}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     <option value="">All Halls</option>
                     {hallOptions.map((hall) => (
@@ -360,7 +360,7 @@ const AdminPublishNoticePage = () => {
                     onChange={handleInputChange}
                     placeholder="Enter the full notice content..."
                     rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent resize-vertical"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-vertical"
                     required
                   />
                   <p className="text-sm text-gray-500 mt-1">
@@ -377,13 +377,13 @@ const AdminPublishNoticePage = () => {
                     type="file"
                     accept="application/pdf"
                     onChange={handlePdfChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Upload a PDF notice file (max 10MB).
                   </p>
                   {pdfFile && (
-                    <p className="text-sm text-[#19aaba] mt-2">Selected: {pdfFile.name}</p>
+                    <p className="text-sm text-primary mt-2">Selected: {pdfFile.name}</p>
                   )}
                 </div>
 
@@ -398,7 +398,7 @@ const AdminPublishNoticePage = () => {
                     value={formData.googleFormUrl}
                     onChange={handleInputChange}
                     placeholder="https://forms.gle/..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
@@ -417,7 +417,7 @@ const AdminPublishNoticePage = () => {
                     type="button"
                     onClick={handlePublish}
                     disabled={loading}
-                    className="flex-1 bg-[#19aaba] text-white py-3 px-6 rounded-lg hover:bg-[#17a0a8] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="flex-1 bg-primary text-white py-3 px-6 rounded-lg hover:bg-[#17a0a8] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {loading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -438,7 +438,7 @@ const AdminPublishNoticePage = () => {
                 <h3 className="text-lg font-semibold text-gray-900">Preview</h3>
                 <button
                   onClick={() => setPreview(!preview)}
-                  className="text-sm text-[#19aaba] hover:text-[#17a0a8]"
+                  className="text-sm text-primary hover:text-[#17a0a8]"
                 >
                   {preview ? 'Hide' : 'Show'}
                 </button>
@@ -466,7 +466,7 @@ const AdminPublishNoticePage = () => {
                     </div>
 
                     {formData.hall && (
-                      <div className="text-xs font-medium text-[#158c99] bg-[#19aaba]/10 px-3 py-1 rounded-full inline-flex">
+                      <div className="text-xs font-medium text-primary-light bg-primary/10 px-3 py-1 rounded-full inline-flex">
                         Hall: {formData.hall}
                       </div>
                     )}
@@ -478,13 +478,13 @@ const AdminPublishNoticePage = () => {
                     {(pdfFile || formData.googleFormUrl.trim()) && (
                       <div className="mt-4 space-y-2">
                         {pdfFile && (
-                          <div className="inline-flex items-center gap-2 text-sm text-[#158c99] bg-[#19aaba]/10 px-3 py-1 rounded-full">
+                          <div className="inline-flex items-center gap-2 text-sm text-primary-light bg-primary/10 px-3 py-1 rounded-full">
                             <FileText className="w-4 h-4" />
                             PDF attached
                           </div>
                         )}
                         {formData.googleFormUrl.trim() && (
-                          <div className="inline-flex items-center gap-2 text-sm text-[#158c99] bg-[#19aaba]/10 px-3 py-1 rounded-full ml-2">
+                          <div className="inline-flex items-center gap-2 text-sm text-primary-light bg-primary/10 px-3 py-1 rounded-full ml-2">
                             <LinkIcon className="w-4 h-4" />
                             Google Form added
                           </div>
@@ -494,7 +494,7 @@ const AdminPublishNoticePage = () => {
                   </div>
 
                   {/* Publishing Info */}
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-surface p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 mb-2">Publishing Details</h4>
                     <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex justify-between">
@@ -549,7 +549,7 @@ const AdminPublishNoticePage = () => {
             <button
               type="button"
               onClick={fetchPreviousNotices}
-              className="text-sm text-[#19aaba] hover:text-[#158c99]"
+              className="text-sm text-primary hover:text-primary-light"
             >
               Refresh
             </button>
@@ -566,7 +566,7 @@ const AdminPublishNoticePage = () => {
           {!noticesLoading && previousNotices.length > 0 && (
             <div className="space-y-3">
               {previousNotices.slice(0, 8).map((notice) => (
-                <div key={notice._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div key={notice._id} className="border border-gray-200 rounded-lg p-4 hover:bg-surface transition-colors">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
                       <h3 className="font-semibold text-gray-900">{notice.title}</h3>
@@ -593,7 +593,7 @@ const AdminPublishNoticePage = () => {
                           href={notice.pdfUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                          className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-accent/20 text-secondary hover:bg-accent/30"
                         >
                           <FileText className="w-3.5 h-3.5" /> PDF
                         </a>

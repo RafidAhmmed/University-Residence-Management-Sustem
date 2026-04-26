@@ -19,9 +19,9 @@ const Notice = () => {
           id: notice._id,
           title: notice.title,
           content: notice.content,
-          category: notice.type, // Map type to category
+          category: notice.type,
           priority: notice.priority,
-          date: new Date(notice.publishedAt).toISOString().split('T')[0], // YYYY-MM-DD
+          date: new Date(notice.publishedAt).toISOString().split('T')[0],
           time: new Date(notice.publishedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           author: notice.publishedBy?.name || 'Unknown',
           pdfUrl: notice.pdfUrl,
@@ -36,12 +36,11 @@ const Notice = () => {
         setLoading(false);
       }
     };
-
     fetchNotices();
   }, []);
 
   const categories = [
-    { value: 'all', label: 'All Notices', color: 'bg-gray-100 text-gray-800' },
+    { value: 'all', label: 'All Notices', color: 'bg-gray-100 text-gray-700' },
     { value: 'maintenance', label: 'Maintenance', color: 'bg-yellow-100 text-yellow-800' },
     { value: 'event', label: 'Events', color: 'bg-purple-100 text-purple-800' },
     { value: 'emergency', label: 'Emergency', color: 'bg-red-100 text-red-800' },
@@ -50,27 +49,19 @@ const Notice = () => {
 
   const getPriorityIcon = (priority) => {
     switch (priority) {
-      case 'high':
-        return <AlertTriangle size={16} className="text-red-500" />;
-      case 'medium':
-        return <Info size={16} className="text-yellow-500" />;
-      case 'low':
-        return <CheckCircle size={16} className="text-green-500" />;
-      default:
-        return <Info size={16} className="text-gray-500" />;
+      case 'high': return <AlertTriangle size={15} className="text-danger" />;
+      case 'medium': return <Info size={15} className="text-yellow-500" />;
+      case 'low': return <CheckCircle size={15} className="text-green-500" />;
+      default: return <Info size={15} className="text-gray-400" />;
     }
   };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'high':
-        return 'border-l-red-500';
-      case 'medium':
-        return 'border-l-yellow-500';
-      case 'low':
-        return 'border-l-green-500';
-      default:
-        return 'border-l-gray-500';
+      case 'high': return 'border-l-danger';
+      case 'medium': return 'border-l-yellow-500';
+      case 'low': return 'border-l-green-500';
+      default: return 'border-l-gray-300';
     }
   };
 
@@ -82,175 +73,151 @@ const Notice = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-[#19aaba] via-[#158c99] to-[#116d77] text-white py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Bell size={48} className="mr-4" />
-              <h1 className="text-4xl md:text-5xl font-bold">Hall Notices</h1>
-            </div>
-            <p className="text-xl md:text-2xl text-cyan-100 max-w-3xl mx-auto">
-              Stay updated with the latest notices, important dates, and hall-related information
-            </p>
+    <div className="min-h-screen bg-surface">
+      {/* Banner */}
+      <div className="page-banner">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center mb-3">
+            <Bell size={36} className="mr-3 text-accent" />
+            <h1 className="text-3xl sm:text-4xl font-bold font-heading">Hall Notices</h1>
           </div>
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+            Stay updated with the latest notices, important dates, and hall-related information
+          </p>
         </div>
       </div>
 
-      {/* Search and Filter Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba] mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading notices...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading notices...</p>
           </div>
         )}
 
         {error && (
           <div className="text-center py-12">
-            <AlertTriangle size={64} className="mx-auto text-red-300 mb-4" />
-            <h3 className="text-xl font-semibold text-red-600 mb-2">Error loading notices</h3>
+            <AlertTriangle size={56} className="mx-auto text-danger/40 mb-4" />
+            <h3 className="text-lg font-semibold text-danger mb-2 font-heading">Error loading notices</h3>
             <p className="text-gray-500">{error}</p>
           </div>
         )}
 
         {!loading && !error && (
           <>
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            {/* Search Bar */}
-            <div className="relative flex-1 w-full md:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search notices..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent outline-none"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <Filter size={20} className="text-gray-600" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent outline-none"
-              >
-                {categories.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Notices Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredNotices.map((notice) => (
-            <div
-              key={notice.id}
-              className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 ${getPriorityColor(notice.priority)} overflow-hidden`}
-            >
-              {/* Notice Header */}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    {getPriorityIcon(notice.priority)}
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      categories.find(cat => cat.value === notice.category)?.color || 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {categories.find(cat => cat.value === notice.category)?.label || notice.category}
-                    </span>
-                  </div>
-                  {notice.attachments > 0 && (
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                      📎 {notice.attachments}
-                    </span>
-                  )}
+            {/* Search & Filter */}
+            <div className="bg-white rounded-xl shadow-sm p-5 mb-8 border border-gray-100">
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                <div className="relative flex-1 w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                  <input
+                    type="text"
+                    placeholder="Search notices..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none text-sm"
+                  />
                 </div>
-
-                <h3 className="text-lg font-bold text-gray-800 mb-3 line-clamp-2">
-                  {notice.title}
-                </h3>
-
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {notice.content}
-                </p>
-
-                {(notice.pdfUrl || notice.googleFormUrl) && (
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {notice.pdfUrl && (
-                      <a
-                        href={notice.pdfUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <FileText size={12} /> PDF
-                      </a>
-                    )}
-                    {notice.googleFormUrl && (
-                      <a
-                        href={notice.googleFormUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ExternalLink size={12} /> Form
-                      </a>
-                    )}
-                  </div>
-                )}
-
-                {/* Notice Meta */}
-                <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      <span>{new Date(notice.date).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock size={12} />
-                      <span>{notice.time}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <User size={12} />
-                    <span>{notice.author}</span>
-                  </div>
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <Filter size={18} className="text-gray-500" />
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none text-sm"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
+            </div>
 
-              {/* Notice Footer */}
-              <div className="px-6 pb-4">
-                <button 
-                  onClick={() => navigate(`/notice/${notice.id}`)}
-                  className="w-full bg-gradient-to-r from-[#19aaba] to-[#158c99] text-white py-2 px-4 rounded-lg hover:from-[#158c99] hover:to-[#116d77] transition-all duration-300 text-sm font-medium"
+            {/* Notices Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredNotices.map((notice) => (
+                <div
+                  key={notice.id}
+                  className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border-l-4 ${getPriorityColor(notice.priority)} overflow-hidden border border-gray-100 card-hover`}
                 >
-                  Read More
-                </button>
-              </div>
+                  <div className="p-5">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        {getPriorityIcon(notice.priority)}
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          categories.find(c => c.value === notice.category)?.color || 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {categories.find(c => c.value === notice.category)?.label || notice.category}
+                        </span>
+                      </div>
+                      {notice.attachments > 0 && (
+                        <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
+                          📎 {notice.attachments}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-base font-bold text-primary mb-2 line-clamp-2 font-heading">{notice.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{notice.content}</p>
+
+                    {(notice.pdfUrl || notice.googleFormUrl) && (
+                      <div className="flex flex-wrap items-center gap-2 mb-4">
+                        {notice.pdfUrl && (
+                          <a href={notice.pdfUrl} target="_blank" rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-accent/20 text-secondary hover:bg-accent/40"
+                            onClick={(e) => e.stopPropagation()}>
+                            <FileText size={12} /> PDF
+                          </a>
+                        )}
+                        {notice.googleFormUrl && (
+                          <a href={notice.googleFormUrl} target="_blank" rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100"
+                            onClick={(e) => e.stopPropagation()}>
+                            <ExternalLink size={12} /> Form
+                          </a>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Meta */}
+                    <div className="flex items-center justify-between text-xs text-gray-400 border-t border-gray-50 pt-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Calendar size={11} />
+                          <span>{new Date(notice.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock size={11} />
+                          <span>{notice.time}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <User size={11} />
+                        <span>{notice.author}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="px-5 pb-4">
+                    <button
+                      onClick={() => navigate(`/notice/${notice.id}`)}
+                      className="w-full bg-accent text-secondary py-2 px-4 rounded-lg hover:bg-accent-dark transition-colors duration-200 text-sm font-semibold"
+                    >
+                      Read More
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* No Results */}
-        {filteredNotices.length === 0 && (
-          <div className="text-center py-12">
-            <Bell size={64} className="mx-auto text-gray-300 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No notices found</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria</p>
-          </div>
-        )}
-
-        </>
+            {filteredNotices.length === 0 && (
+              <div className="text-center py-12">
+                <Bell size={56} className="mx-auto text-gray-300 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-500 mb-2 font-heading">No notices found</h3>
+                <p className="text-gray-400 text-sm">Try adjusting your search or filter criteria</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

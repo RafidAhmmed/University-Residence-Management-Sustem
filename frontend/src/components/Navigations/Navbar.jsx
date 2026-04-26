@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -9,18 +9,15 @@ const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
 
   const isActive = (path) => {
-    if (path === "/") {
-      return location.pathname === "/";
-    }
+    if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogout = async () => {
     await logout();
@@ -29,9 +26,7 @@ const Navbar = () => {
     setIsProfileDropdownOpen(false);
   };
 
-  const toggleProfileDropdown = () => {
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
-  };
+  const toggleProfileDropdown = () => setIsProfileDropdownOpen(!isProfileDropdownOpen);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -40,247 +35,179 @@ const Navbar = () => {
         setIsProfileDropdownOpen(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Scroll shadow effect
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  const navLinks = [
+    { to: "/", label: "Home" },
+    { to: "/facilities", label: "Facilities" },
+    { to: "/notice", label: "Notice" },
+    { to: "/contact", label: "Contact" },
+  ];
+
+  const linkBase =
+    "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200";
+  const linkActive = "bg-white/15 text-white border-b-2 border-accent";
+  const linkInactive = "text-white/85 hover:text-white hover:bg-white/10";
+
   return (
-    <nav className="bg-gradient-to-r from-[#19aaba] via-[#158c99] to-[#116d77] shadow-lg sticky top-0 z-50">
+    <nav
+      id="main-navbar"
+      className={`bg-primary sticky top-0 z-50 transition-shadow duration-300 ${
+        scrolled ? "shadow-lg" : ""
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo and Brand */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center shadow-md transform hover:scale-105 transition-transform duration-300 overflow-hidden border-2 border-red-500">
-                <img
-                  src="/logo.png"
-                  alt="JUST Hall Management Logo"
-                  className="w-full h-full object-contain p-1"
-                />
-              </div>
+          {/* Logo & Brand */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center shadow-sm">
+              <img
+                src="/logo.png"
+                alt="JUST Logo"
+                className="w-full h-full object-contain p-0.5"
+              />
             </div>
-            <Link
-              to="/"
-              className="text-xl sm:text-2xl font-bold text-white tracking-tight hover:text-gray-100 transition-colors duration-200"
-            >
-              Hall Management
-            </Link>
-          </div>
+            <span className="text-lg sm:text-xl font-bold text-white tracking-tight font-heading group-hover:text-accent transition-colors duration-200">
+              JUST HallSync
+            </span>
+          </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
-            <Link
-              to="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                isActive("/")
-                  ? "bg-white/20 text-white border-b-2 border-white"
-                  : "text-white hover:text-gray-100 hover:bg-white/10"
-              }`}
-            >
-              Home
-            </Link>
-            <Link
-              to="/facilities"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                isActive("/facilities")
-                  ? "bg-white/20 text-white border-b-2 border-white"
-                  : "text-white hover:text-gray-100 hover:bg-white/10"
-              }`}
-            >
-              Facilities
-            </Link>
-            <Link
-              to="/notice"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                isActive("/notice")
-                  ? "bg-white/20 text-white border-b-2 border-white"
-                  : "text-white hover:text-gray-100 hover:bg-white/10"
-              }`}
-            >
-              Notice
-            </Link>
-            {/* <Link
-              to="/room-allocation"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                isActive("/room-allocation")
-                  ? "bg-white/20 text-white border-b-2 border-white"
-                  : "text-white hover:text-gray-100 hover:bg-white/10"
-              }`}
-            >
-              Room Allocation
-            </Link> */}
-            <Link
-              to="/contact"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                isActive("/contact")
-                  ? "bg-white/20 text-white border-b-2 border-white"
-                  : "text-white hover:text-gray-100 hover:bg-white/10"
-              }`}
-            >
-              Contact
-            </Link>
-
-            {/* Auth Buttons */}
-            {isAuthenticated() ? (
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={toggleProfileDropdown}
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 text-white rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:bg-white/20"
-                >
-                  <User size={16} />
-                </button>
-
-                {/* Profile Dropdown */}
-                {isProfileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                    <Link
-                      to="/user/profile"
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                      onClick={() => setIsProfileDropdownOpen(false)}
-                    >
-                      <User size={16} />
-                      <span>Profile</span>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={() => navigate("/login")}
-                className="px-4 xl:px-6 py-2 bg-white text-[#19aaba] rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:bg-gray-100"
-              >
-                Login
-              </button>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
-            <button
-              onClick={toggleMenu}
-              className="text-white hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg p-2"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {isMenuOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="lg:hidden pb-4 animate-slideDown">
-            <div className="flex flex-col space-y-2">
+          <div className="hidden lg:flex items-center gap-1">
+            {navLinks.map((link) => (
               <Link
-                to="/"
-                className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
-                  isActive("/")
-                    ? "bg-white/20 text-white border-l-4 border-white"
-                    : "text-white hover:text-gray-100 hover:bg-white/10"
+                key={link.to}
+                to={link.to}
+                className={`${linkBase} ${
+                  isActive(link.to) ? linkActive : linkInactive
                 }`}
-                onClick={() => setIsMenuOpen(false)}
               >
-                Home
+                {link.label}
               </Link>
-              <Link
-                to="/facilities"
-                className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
-                  isActive("/facilities")
-                    ? "bg-white/20 text-white border-l-4 border-white"
-                    : "text-white hover:text-gray-100 hover:bg-white/10"
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Facilities
-              </Link>
-              <Link
-                to="/notice"
-                className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
-                  isActive("/notice")
-                    ? "bg-white/20 text-white border-l-4 border-white"
-                    : "text-white hover:text-gray-100 hover:bg-white/10"
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Notice
-              </Link>
-              <Link
-                to="/room-allocation"
-                className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
-                  isActive("/room-allocation")
-                    ? "bg-white/20 text-white border-l-4 border-white"
-                    : "text-white hover:text-gray-100 hover:bg-white/10"
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Room Allocation
-              </Link>
-              <Link
-                to="/contact"
-                className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
-                  isActive("/contact")
-                    ? "bg-white/20 text-white border-l-4 border-white"
-                    : "text-white hover:text-gray-100 hover:bg-white/10"
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
+            ))}
 
-              {/* Auth Buttons - Mobile */}
+            {/* Auth */}
+            <div className="ml-4">
               {isAuthenticated() ? (
-                <div className="pt-4 border-t border-white/20">
-                  <div className="space-y-2">
-                    <Link
-                      to="/user/profile"
-                      className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/10 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:bg-white/20"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <User size={16} />
-                      <span>Profile</span>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-red-500 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:bg-red-600"
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </button>
-                  </div>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    id="profile-dropdown-toggle"
+                    onClick={toggleProfileDropdown}
+                    className="flex items-center gap-2 px-3 py-2 bg-white/10 text-white rounded-full text-sm transition-all duration-200 hover:bg-white/20"
+                  >
+                    <User size={16} />
+                  </button>
+
+                  {isProfileDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 border border-gray-100 animate-slideDown">
+                      <Link
+                        to="/user/profile"
+                        id="profile-link"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-surface transition-colors"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        <User size={16} />
+                        <span>Profile</span>
+                      </Link>
+                      <button
+                        id="logout-button"
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-danger hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut size={16} />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <button
-                  onClick={() => {
-                    navigate("/login");
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full px-6 py-3 bg-white text-[#19aaba] rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:bg-gray-100 mt-4"
+                  id="login-button"
+                  onClick={() => navigate("/login")}
+                  className="px-5 py-2 bg-accent text-secondary font-semibold text-sm rounded-lg transition-all duration-200 hover:bg-accent-dark hover:shadow-md"
                 >
                   Login
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            id="mobile-menu-toggle"
+            onClick={toggleMenu}
+            className="lg:hidden text-white hover:text-accent p-2 rounded-lg focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden pb-4 animate-slideDown border-t border-white/10 mt-1">
+            <div className="flex flex-col gap-1 pt-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`px-4 py-2.5 rounded-md text-base font-medium transition-all duration-200 ${
+                    isActive(link.to)
+                      ? "bg-white/15 text-white border-l-3 border-accent"
+                      : "text-white/85 hover:text-white hover:bg-white/10"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Auth — Mobile */}
+              <div className="pt-3 mt-2 border-t border-white/15">
+                {isAuthenticated() ? (
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      to="/user/profile"
+                      className="flex items-center justify-center gap-2 w-full px-5 py-2.5 bg-white/10 text-white rounded-lg font-medium text-sm hover:bg-white/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User size={16} />
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center justify-center gap-2 w-full px-5 py-2.5 bg-danger text-white rounded-lg font-medium text-sm hover:bg-danger-light transition-colors"
+                    >
+                      <LogOut size={16} />
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      navigate("/login");
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full px-5 py-2.5 bg-accent text-secondary rounded-lg font-semibold text-sm transition-colors hover:bg-accent-dark"
+                  >
+                    Login
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

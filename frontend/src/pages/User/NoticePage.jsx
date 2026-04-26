@@ -76,7 +76,7 @@ const NoticePage = () => {
   const getHallBadgeClass = (hallName) => {
     const value = String(hallName || 'all-halls').toLowerCase();
     const palette = [
-      'bg-cyan-50 text-cyan-700 border-cyan-200',
+      'bg-accent/20 text-secondary border-accent',
       'bg-emerald-50 text-emerald-700 border-emerald-200',
       'bg-amber-50 text-amber-800 border-amber-200',
       'bg-violet-50 text-violet-700 border-violet-200',
@@ -99,10 +99,10 @@ const NoticePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-surface py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             <span className="ml-3 text-gray-600">Loading notices...</span>
           </div>
         </div>
@@ -111,12 +111,12 @@ const NoticePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-[#19aaba] text-white p-3 rounded-full">
+            <div className="bg-primary text-white p-3 rounded-full">
               <Bell className="w-6 h-6" />
             </div>
             <div>
@@ -131,12 +131,12 @@ const NoticePage = () => {
             <select
               value={hallView}
               onChange={(e) => setHallView(e.target.value)}
-              className="w-full sm:w-72 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+              className="w-full sm:w-72 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="my">My hall only</option>
               <option value="all">All halls</option>
             </select>
-            <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${hallView === 'my' ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+            <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${hallView === 'my' ? 'bg-accent/20 text-secondary border-accent' : 'bg-surface text-gray-600 border-gray-200'}`}>
               {hallView === 'my' ? `Scoped to ${currentHallLabel}` : 'Scoped to every hall'}
             </span>
           </div>
@@ -225,7 +225,7 @@ const NoticePage = () => {
                           target="_blank"
                           rel="noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs px-2 py-1 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                          className="text-xs px-2 py-1 rounded bg-accent/20 text-secondary hover:bg-accent/30"
                         >
                           PDF
                         </a>
@@ -295,7 +295,7 @@ const NoticePage = () => {
                             href={selectedNotice.pdfUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs px-3 py-2 rounded bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
+                            className="text-xs px-3 py-2 rounded bg-accent/20 text-secondary hover:bg-accent/30"
                           >
                             View PDF
                           </a>

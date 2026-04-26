@@ -8,14 +8,14 @@ import React from 'react';
  * @param {string} size - Size variant: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
  * @param {string} className - Additional CSS classes
  * @param {boolean} showBorder - Whether to show border (default: false)
- * @param {string} borderColor - Border color class (default: 'border-cyan-200')
+ * @param {string} borderColor - Border color class (default: 'border-accent')
  */
 const UserAvatar = ({ 
   user, 
   size = 'md', 
   className = '', 
   showBorder = false,
-  borderColor = 'border-cyan-200'
+  borderColor = 'border-accent'
 }) => {
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -56,7 +56,7 @@ const UserAvatar = ({
   }
 
   return (
-    <div className={`rounded-full bg-gradient-to-r from-[#19aaba] to-[#158c99] flex items-center justify-center ${sizeClass} ${borderClass} ${className}`}>
+    <div className={`rounded-full bg-primary flex items-center justify-center ${sizeClass} ${borderClass} ${className}`}>
       <span className="text-white font-bold">
         {getInitials(user?.name)}
       </span>

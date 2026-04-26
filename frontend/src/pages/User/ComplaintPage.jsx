@@ -97,7 +97,7 @@ const ComplaintPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -142,7 +142,7 @@ const ComplaintPage = () => {
                     key={category.value}
                     className={`relative flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.category === category.value
-                        ? 'border-[#19aaba] bg-[#19aaba]/5'
+                        ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -157,7 +157,7 @@ const ComplaintPage = () => {
                     <div className="flex items-start gap-3">
                       <div className={`p-2 rounded-lg ${
                         formData.category === category.value
-                          ? 'bg-[#19aaba] text-white'
+                          ? 'bg-primary text-white'
                           : 'bg-gray-100 text-gray-600'
                       }`}>
                         {category.icon}
@@ -184,7 +184,7 @@ const ComplaintPage = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Brief summary of your complaint"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -200,7 +200,7 @@ const ComplaintPage = () => {
                     key={level.value}
                     className={`relative flex items-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.priority === level.value
-                        ? 'border-[#19aaba] bg-[#19aaba]/5'
+                        ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -235,7 +235,7 @@ const ComplaintPage = () => {
                 onChange={handleChange}
                 rows={6}
                 placeholder="Please provide detailed information about your complaint. Include when the issue started, how it affects you, and any relevant details that might help resolve it quickly."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent transition-colors resize-vertical"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-vertical"
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -248,7 +248,7 @@ const ComplaintPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 bg-[#19aaba] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#158c99] focus:ring-2 focus:ring-[#19aaba] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-light focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
@@ -271,7 +271,7 @@ const ComplaintPage = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Your Complaints</h2>
           {loadingComplaints ? (
             <div className="flex items-center justify-center py-8">
-              <div className="w-6 h-6 border-2 border-[#19aaba] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
               <span className="ml-2 text-gray-600">Loading complaints...</span>
             </div>
           ) : userComplaints.length === 0 ? (
@@ -324,7 +324,7 @@ const ComplaintPage = () => {
                 };
 
                 return (
-                  <div key={complaint._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div key={complaint._id} className="flex items-center justify-between p-4 bg-surface rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className={`p-2 rounded-full ${getStatusColor(complaint.status).split(' ')[0]}`}>
                         {getStatusIcon(complaint.status)}

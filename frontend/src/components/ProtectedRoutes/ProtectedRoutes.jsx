@@ -9,8 +9,8 @@ export const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader className="animate-spin" size={48} color="#667eea" />
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <Loader className="animate-spin" size={48} color="#1d3557" />
       </div>
     );
   }
@@ -28,8 +28,8 @@ export const UserRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader className="animate-spin" size={48} color="#667eea" />
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <Loader className="animate-spin" size={48} color="#1d3557" />
       </div>
     );
   }
@@ -38,7 +38,6 @@ export const UserRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If user is admin, redirect to admin dashboard
   if (isAdmin()) {
     return <Navigate to="/admin" replace />;
   }
@@ -52,8 +51,8 @@ export const AdminRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader className="animate-spin" size={48} color="#667eea" />
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <Loader className="animate-spin" size={48} color="#1d3557" />
       </div>
     );
   }
@@ -64,15 +63,15 @@ export const AdminRoute = ({ children }) => {
 
   if (!isAdmin()) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-surface p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
+          <h1 className="text-2xl font-bold text-danger mb-4 font-heading">Access Denied</h1>
           <p className="text-gray-600 mb-6">
             You don't have permission to access this page. Admin privileges required.
           </p>
           <a 
             href="/" 
-            className="inline-block px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="inline-block px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors font-medium"
           >
             Go Back Home
           </a>

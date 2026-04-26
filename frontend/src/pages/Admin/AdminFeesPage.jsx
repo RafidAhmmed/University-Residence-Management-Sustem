@@ -129,7 +129,7 @@ const AdminFeesPage = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Loader className="mx-auto mb-4 animate-spin text-[#19aaba]" size={40} />
+          <Loader className="mx-auto mb-4 animate-spin text-primary" size={40} />
           <p className="text-gray-600">Loading fee management...</p>
         </div>
       </div>
@@ -137,13 +137,13 @@ const AdminFeesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br surface">
       <div className="mx-auto max-w-7xl p-4 md:p-8">
-        <div className="mb-8 rounded-2xl bg-gradient-to-r from-[#19aaba] to-[#158c99] p-6 text-white shadow-xl md:p-8">
+        <div className="mb-8 rounded-2xl bg-gradient-to-r from-primary to-primary-light p-6 text-white shadow-xl md:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold md:text-4xl">Fees & Payments</h1>
-              <p className="mt-2 text-cyan-100">Assign multiple fee types to filtered users and track mock payments.</p>
+              <p className="mt-2 text-white/70">Assign multiple fee types to filtered users and track mock payments.</p>
             </div>
             <div className="hidden rounded-xl bg-white/15 px-4 py-3 text-sm backdrop-blur sm:block">
               <div className="font-semibold">Assigned Records</div>
@@ -156,7 +156,7 @@ const AdminFeesPage = () => {
           <div className="space-y-6 xl:col-span-2">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
               <div className="mb-6 flex items-center gap-3">
-                <div className="rounded-xl bg-[#19aaba]/10 p-3 text-[#19aaba]"><CreditCard size={22} /></div>
+                <div className="rounded-xl bg-primary/10 p-3 text-primary"><CreditCard size={22} /></div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">Assign New Fees</h2>
                   <p className="text-sm text-gray-600">Create one batch with several fee categories and an optional late fee.</p>
@@ -172,12 +172,12 @@ const AdminFeesPage = () => {
                       value={batchName}
                       onChange={(e) => setBatchName(e.target.value)}
                       placeholder="e.g. Spring semester dues"
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#19aaba]"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-primary"
                     />
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-gray-700">Search Users</label>
-                    <div className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-3 focus-within:ring-2 focus-within:ring-[#19aaba]">
+                    <div className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-3 focus-within:ring-2 focus-within:ring-primary">
                       <Search size={16} className="text-gray-400" />
                       <input
                         type="text"
@@ -190,7 +190,7 @@ const AdminFeesPage = () => {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-gray-50 p-4">
+                <div className="rounded-2xl bg-surface p-4">
                   <div className="mb-4 flex items-center gap-2 text-gray-700">
                     <Filter size={18} />
                     <span className="font-semibold">Filters</span>
@@ -235,14 +235,14 @@ const AdminFeesPage = () => {
                       <h3 className="text-lg font-semibold text-gray-900">Fee Items</h3>
                       <p className="text-sm text-gray-600">Add one or more fee lines to the selected users.</p>
                     </div>
-                    <button type="button" onClick={addFeeItem} className="inline-flex items-center gap-2 rounded-lg bg-[#19aaba] px-4 py-2 text-sm font-medium text-white hover:bg-[#158c99]">
+                    <button type="button" onClick={addFeeItem} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-light">
                       <Plus size={16} /> Add Fee
                     </button>
                   </div>
 
                   <div className="space-y-4">
                     {feeItems.map((item, index) => (
-                      <div key={`${index}-${item.title}`} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                      <div key={`${index}-${item.title}`} className="rounded-xl border border-gray-200 bg-surface p-4">
                         <div className="mb-3 flex items-center justify-between">
                           <p className="font-semibold text-gray-800">Fee #{index + 1}</p>
                           {feeItems.length > 1 && (
@@ -272,12 +272,12 @@ const AdminFeesPage = () => {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-cyan-50 p-4 text-sm text-cyan-900">
+                <div className="rounded-2xl bg-accent/20 p-4 text-sm text-cyan-900">
                   <p className="font-semibold">Target preview</p>
                   <p>{selectedUserIds.length > 0 ? `${selectedUserIds.length} manually selected users` : `${filteredUsers.length} users matched by filters`}</p>
                 </div>
 
-                <button type="submit" disabled={submitting} className="inline-flex items-center gap-2 rounded-xl bg-[#19aaba] px-6 py-3 font-semibold text-white shadow-lg transition-colors hover:bg-[#158c99] disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="submit" disabled={submitting} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-lg transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60">
                   {submitting ? <Loader size={18} className="animate-spin" /> : <CheckCircle size={18} />}
                   {submitting ? 'Assigning...' : 'Assign Fees'}
                 </button>
@@ -290,7 +290,7 @@ const AdminFeesPage = () => {
                   <h2 className="text-xl font-bold text-gray-900">Filtered Users</h2>
                   <p className="text-sm text-gray-600">Choose specific users or rely on the filter rules above.</p>
                 </div>
-                <button type="button" onClick={() => setSelectedUserIds([])} className="text-sm font-medium text-[#19aaba] hover:text-[#158c99]">Clear selection</button>
+                <button type="button" onClick={() => setSelectedUserIds([])} className="text-sm font-medium text-primary hover:text-primary-light">Clear selection</button>
               </div>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {filteredUsers.map((user) => {
@@ -301,14 +301,14 @@ const AdminFeesPage = () => {
                       key={user.id}
                       type="button"
                       onClick={() => toggleUser(user.id)}
-                      className={`rounded-xl border p-4 text-left transition-all ${selected ? 'border-[#19aaba] bg-[#19aaba]/5 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'}`}
+                      className={`rounded-xl border p-4 text-left transition-all ${selected ? 'border-primary bg-primary/5 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'}`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="font-semibold text-gray-900">{user.name}</p>
                           <p className="text-sm text-gray-600">{user.studentId}</p>
                         </div>
-                        <span className={`rounded-full px-2 py-1 text-xs font-medium ${selected ? 'bg-[#19aaba] text-white' : 'bg-gray-100 text-gray-700'}`}>
+                        <span className={`rounded-full px-2 py-1 text-xs font-medium ${selected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'}`}>
                           {selected ? 'Selected' : 'Click to select'}
                         </span>
                       </div>
@@ -327,7 +327,7 @@ const AdminFeesPage = () => {
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-gray-900">Recent Fee Records</h2>
-                <button type="button" onClick={fetchData} className="inline-flex items-center gap-2 text-sm font-medium text-[#19aaba] hover:text-[#158c99]">
+                <button type="button" onClick={fetchData} className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-light">
                   <RefreshCw size={16} /> Refresh
                 </button>
               </div>

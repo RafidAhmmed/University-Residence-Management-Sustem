@@ -262,10 +262,10 @@ const AdminManageUsersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-surface py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             <span className="ml-3 text-gray-600">Loading users...</span>
           </div>
         </div>
@@ -274,12 +274,12 @@ const AdminManageUsersPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
-              <div className="bg-[#19aaba] text-white p-3 rounded-full">
+              <div className="bg-primary text-white p-3 rounded-full">
                 <Users className="w-6 h-6" />
               </div>
               <div>
@@ -299,7 +299,7 @@ const AdminManageUsersPage = () => {
               <button
                 type="button"
                 onClick={downloadCsv}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm bg-[#19aaba] text-white rounded-lg hover:bg-[#158c99]"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-light"
               >
                 <Download className="w-4 h-4" /> Download CSV
               </button>
@@ -319,7 +319,7 @@ const AdminManageUsersPage = () => {
               <div className="text-2xl font-bold text-green-600">{stats.students}</div>
               <div className="text-sm text-green-800">Students</div>
             </div>
-            <div className="bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+            <div className="bg-accent/20 p-4 rounded-lg border border-accent">
               <div className="text-2xl font-bold text-cyan-600">{stats.filtered}</div>
               <div className="text-sm text-cyan-800">Filtered Result</div>
             </div>
@@ -335,7 +335,7 @@ const AdminManageUsersPage = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name, student ID, email or phone"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
@@ -346,7 +346,7 @@ const AdminManageUsersPage = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -358,7 +358,7 @@ const AdminManageUsersPage = () => {
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
               placeholder="All Departments"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
             />
             <datalist id="department-filter-options">
               {departments.map((department) => (
@@ -371,7 +371,7 @@ const AdminManageUsersPage = () => {
               value={hallFilter}
               onChange={(e) => setHallFilter(e.target.value)}
               placeholder="All Halls"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
             />
             <datalist id="hall-filter-options">
               {halls.map((hall) => (
@@ -384,7 +384,7 @@ const AdminManageUsersPage = () => {
               value={sessionFilter}
               onChange={(e) => setSessionFilter(e.target.value)}
               placeholder="All Sessions"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
             />
             <datalist id="session-filter-options">
               {sessions.map((session) => (
@@ -462,7 +462,7 @@ const AdminManageUsersPage = () => {
                               value={user.role}
                               disabled={updatingRoleUserId === userId}
                               onChange={(e) => handleRoleChange(userId, e.target.value)}
-                              className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-[#19aaba]"
+                              className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-primary"
                             >
                               <option value="user">user</option>
                               <option value="admin">admin</option>
@@ -474,7 +474,7 @@ const AdminManageUsersPage = () => {
                             <button
                               type="button"
                               onClick={() => openEditModal(user)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-cyan-50 text-cyan-700 rounded hover:bg-cyan-100"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/20 text-secondary rounded hover:bg-accent/30"
                             >
                               <Pencil className="w-3.5 h-3.5" /> Edit
                             </button>
@@ -528,19 +528,19 @@ const AdminManageUsersPage = () => {
               <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input name="name" value={editForm.name} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input name="name" value={editForm.name} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
-                  <input name="studentId" value={editForm.studentId} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input name="studentId" value={editForm.studentId} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input type="email" name="email" value={editForm.email} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input type="email" name="email" value={editForm.email} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                  <select name="gender" value={editForm.gender} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]">
+                  <select name="gender" value={editForm.gender} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                     <option value="">Select</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -550,11 +550,11 @@ const AdminManageUsersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                  <input name="phone" value={editForm.phone} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input name="phone" value={editForm.phone} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                  <select name="role" value={editForm.role} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]">
+                  <select name="role" value={editForm.role} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                     <option value="user">user</option>
                     <option value="admin">admin</option>
                   </select>
@@ -566,7 +566,7 @@ const AdminManageUsersPage = () => {
                     name="department"
                     value={editForm.department}
                     onChange={handleEditInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                     placeholder="Select Department"
                   />
                   <datalist id="department-edit-options">
@@ -582,7 +582,7 @@ const AdminManageUsersPage = () => {
                     name="session"
                     value={editForm.session}
                     onChange={handleEditInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                     placeholder="Select Session"
                   />
                   <datalist id="session-edit-options">
@@ -593,7 +593,7 @@ const AdminManageUsersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
-                  <select name="bloodGroup" value={editForm.bloodGroup} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]">
+                  <select name="bloodGroup" value={editForm.bloodGroup} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                     <option value="">Select</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
@@ -612,7 +612,7 @@ const AdminManageUsersPage = () => {
                     name="allocatedHall"
                     value={editForm.allocatedHall}
                     onChange={handleEditInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                     placeholder="Select Hall"
                   />
                   <datalist id="hall-edit-options">
@@ -623,11 +623,11 @@ const AdminManageUsersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Allocated Room</label>
-                  <input name="allocatedRoom" value={editForm.allocatedRoom} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input name="allocatedRoom" value={editForm.allocatedRoom} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Home Town</label>
-                  <input name="homeTown" value={editForm.homeTown} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba]" />
+                  <input name="homeTown" value={editForm.homeTown} onChange={handleEditInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
                 </div>
               </div>
 
@@ -644,7 +644,7 @@ const AdminManageUsersPage = () => {
                   type="button"
                   onClick={handleSaveEdit}
                   disabled={savingEdit}
-                  className="px-4 py-2 text-sm font-medium text-white bg-[#19aaba] rounded-lg hover:bg-[#158c99] disabled:opacity-60"
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-light disabled:opacity-60"
                 >
                   {savingEdit ? 'Saving...' : 'Save Changes'}
                 </button>

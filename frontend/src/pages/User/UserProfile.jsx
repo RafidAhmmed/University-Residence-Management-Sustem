@@ -230,7 +230,7 @@ const UserProfile = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>
@@ -238,7 +238,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {nearestFee && (
           <div className={`mb-6 rounded-xl border p-4 shadow-sm ${nearestFee.isOverdue ? 'border-red-200 bg-red-50 text-red-900' : 'border-amber-200 bg-amber-50 text-amber-900'}`}>
@@ -256,7 +256,7 @@ const UserProfile = () => {
               <button
                 type="button"
                 onClick={() => handleOpenPayment(nearestFee)}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#19aaba] px-4 py-2 text-sm font-medium text-white hover:bg-[#158c99]"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-light"
               >
                 <CreditCard className="h-4 w-4" />
                 Pay now
@@ -267,7 +267,7 @@ const UserProfile = () => {
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#19aaba] to-[#158c99] px-6 py-8">
+          <div className="bg-gradient-to-r from-primary to-primary-light px-6 py-8">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center overflow-hidden cursor-pointer" onClick={() => setShowImageModal(true)}>
@@ -278,15 +278,15 @@ const UserProfile = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <User className="w-10 h-10 text-[#19aaba]" />
+                    <User className="w-10 h-10 text-primary" />
                   )}
                 </div>
                 {isEditing && (
                   <button
                     onClick={handleProfilePictureClick}
-                    className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-lg hover:bg-gray-50 transition-colors"
+                    className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-lg hover:bg-surface transition-colors"
                   >
-                    <Camera className="w-4 h-4 text-[#19aaba]" />
+                    <Camera className="w-4 h-4 text-primary" />
                   </button>
                 )}
                 <input
@@ -299,7 +299,7 @@ const UserProfile = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">{user.name}</h1>
-                <p className="text-[#19aaba] bg-white px-3 py-1 rounded-full text-sm font-medium inline-block mt-2">
+                <p className="text-primary bg-white px-3 py-1 rounded-full text-sm font-medium inline-block mt-2">
                   {user.role === 'admin' ? 'Administrator' : 'Student'}
                 </p>
               </div>
@@ -319,7 +319,7 @@ const UserProfile = () => {
               </div>
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#19aaba] text-white rounded-lg hover:bg-[#158c99] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors"
               >
                 <Edit className="w-4 h-4" />
                 {isEditing ? 'Cancel' : 'Edit Profile'}
@@ -338,7 +338,7 @@ const UserProfile = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       required
                       disabled={isProfileLocked}
                     />
@@ -353,7 +353,7 @@ const UserProfile = () => {
                       name="studentId"
                       value={formData.studentId}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       required
                       disabled
                     />
@@ -368,7 +368,7 @@ const UserProfile = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       required
                       disabled={isProfileLocked}
                     />
@@ -382,7 +382,7 @@ const UserProfile = () => {
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       disabled={isProfileLocked}
                     >
                       <option value="">Select Gender</option>
@@ -402,7 +402,7 @@ const UserProfile = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="+880 1XX XXX XXXX"
                     />
                   </div>
@@ -415,7 +415,7 @@ const UserProfile = () => {
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       disabled={isProfileLocked}
                     />
                     {isProfileLocked && <p className="text-xs text-gray-500 mt-1">Contact admin to change</p>}
@@ -428,7 +428,7 @@ const UserProfile = () => {
                       name="bloodGroup"
                       value={formData.bloodGroup}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent ${isProfileLocked ? 'appearance-none' : ''}`}
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${isProfileLocked ? 'appearance-none' : ''}`}
                       disabled={isProfileLocked}
                     >
                       <option value="">Select Blood Group</option>
@@ -451,7 +451,7 @@ const UserProfile = () => {
                       name="session"
                       value={formData.session}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       disabled={isProfileLocked}
                     >
                       <option value="">Select Session</option>
@@ -469,7 +469,7 @@ const UserProfile = () => {
                       name="department"
                       value={formData.department}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       disabled={isProfileLocked}
                     >
                       <option value="">Select Department</option>
@@ -488,7 +488,7 @@ const UserProfile = () => {
                       name="homeTown"
                       value={formData.homeTown}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="e.g., Dhaka"
                       disabled={isProfileLocked}
                     />
@@ -502,7 +502,7 @@ const UserProfile = () => {
                       name="allocatedHall"
                       value={formData.allocatedHall}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       disabled
                     >
                       <option value="">Select Hall</option>
@@ -521,7 +521,7 @@ const UserProfile = () => {
                       name="allocatedRoom"
                       value={formData.allocatedRoom}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#19aaba] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="Room number"
                       disabled
                     />
@@ -533,7 +533,7 @@ const UserProfile = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-2 bg-[#19aaba] text-white rounded-lg hover:bg-[#158c99] disabled:opacity-50"
+                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50"
                   >
                     {isLoading ? 'Saving...' : 'Save Changes'}
                   </button>
@@ -667,14 +667,14 @@ const UserProfile = () => {
               <h2 className="text-xl font-semibold text-gray-900">My Fees</h2>
               <p className="text-sm text-gray-600">View your dues and pay with bKash, Nagad, or SSLCommerz mock checkout.</p>
             </div>
-            <div className="rounded-full bg-[#19aaba]/10 px-3 py-1 text-sm font-medium text-[#19aaba]">
+            <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
               {fees.length} fee{fees.length === 1 ? '' : 's'} assigned
             </div>
           </div>
 
           {feesLoading ? (
             <div className="flex items-center gap-3 text-gray-600">
-              <Loader className="h-4 w-4 animate-spin text-[#19aaba]" />
+              <Loader className="h-4 w-4 animate-spin text-primary" />
               Loading fees...
             </div>
           ) : fees.length ? (
@@ -720,7 +720,7 @@ const UserProfile = () => {
                       <button
                         type="button"
                         onClick={() => handleOpenPayment(fee)}
-                        className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#19aaba] px-4 py-2 text-sm font-medium text-white hover:bg-[#158c99]"
+                        className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-light"
                       >
                         <CreditCard className="h-4 w-4" />
                         Pay with online gateway
@@ -755,7 +755,7 @@ const UserProfile = () => {
               <button type="button" onClick={() => setSelectedFee(null)} className="text-gray-500 hover:text-gray-800">×</button>
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-700">
+            <div className="rounded-xl bg-surface p-4 text-sm text-gray-700">
               <p className="font-semibold text-gray-900">{selectedFee.title}</p>
               <p>Due date: {new Date(selectedFee.dueDate).toLocaleDateString()}</p>
               <p>Amount due: ৳{selectedFee.amountDue}</p>
@@ -770,7 +770,7 @@ const UserProfile = () => {
                       key={method}
                       type="button"
                       onClick={() => setPaymentMethod(method)}
-                      className={`rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-all ${paymentMethod === method ? 'border-[#19aaba] bg-[#19aaba]/5 text-[#19aaba]' : 'border-gray-200 text-gray-700 hover:border-gray-300'}`}
+                      className={`rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-all ${paymentMethod === method ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 text-gray-700 hover:border-gray-300'}`}
                     >
                       {method}
                     </button>
@@ -787,7 +787,7 @@ const UserProfile = () => {
                 <button
                   type="submit"
                   disabled={paying}
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#19aaba] px-4 py-3 font-medium text-white hover:bg-[#158c99] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {paying ? <Loader className="h-4 w-4 animate-spin" /> : null}
                   {paying ? 'Processing...' : `Pay with ${paymentMethod}`}
@@ -796,7 +796,7 @@ const UserProfile = () => {
                   type="button"
                   disabled={paying}
                   onClick={() => setSelectedFee(null)}
-                  className="rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+                  className="rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 hover:bg-surface disabled:opacity-60"
                 >
                   Cancel
                 </button>

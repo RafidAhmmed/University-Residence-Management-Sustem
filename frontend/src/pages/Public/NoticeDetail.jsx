@@ -22,33 +22,24 @@ const NoticeDetail = () => {
         setLoading(false);
       }
     };
-
     fetchNotice();
   }, [id]);
 
   const getPriorityIcon = (priority) => {
     switch (priority) {
-      case 'high':
-        return <AlertTriangle size={20} className="text-red-500" />;
-      case 'medium':
-        return <Info size={20} className="text-yellow-500" />;
-      case 'low':
-        return <CheckCircle size={20} className="text-green-500" />;
-      default:
-        return <Info size={20} className="text-gray-500" />;
+      case 'high': return <AlertTriangle size={18} className="text-danger" />;
+      case 'medium': return <Info size={18} className="text-yellow-500" />;
+      case 'low': return <CheckCircle size={18} className="text-green-500" />;
+      default: return <Info size={18} className="text-gray-400" />;
     }
   };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'high':
-        return 'border-l-red-500';
-      case 'medium':
-        return 'border-l-yellow-500';
-      case 'low':
-        return 'border-l-green-500';
-      default:
-        return 'border-l-gray-500';
+      case 'high': return 'border-l-danger';
+      case 'medium': return 'border-l-yellow-500';
+      case 'low': return 'border-l-green-500';
+      default: return 'border-l-gray-300';
     }
   };
 
@@ -61,10 +52,10 @@ const NoticeDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19aaba] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading notice...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading notice...</p>
         </div>
       </div>
     );
@@ -72,14 +63,14 @@ const NoticeDetail = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <AlertTriangle size={64} className="mx-auto text-red-300 mb-4" />
-          <h3 className="text-xl font-semibold text-red-600 mb-2">Error loading notice</h3>
-          <p className="text-gray-500">{error}</p>
+          <AlertTriangle size={56} className="mx-auto text-danger/40 mb-4" />
+          <h3 className="text-lg font-semibold text-danger mb-2 font-heading">Error loading notice</h3>
+          <p className="text-gray-500 mb-4">{error}</p>
           <button
             onClick={() => navigate('/notice')}
-            className="mt-4 bg-[#19aaba] text-white px-4 py-2 rounded-lg hover:bg-[#158c99] transition-colors"
+            className="bg-accent text-secondary px-5 py-2 rounded-lg hover:bg-accent-dark transition-colors font-medium text-sm"
           >
             Back to Notices
           </button>
@@ -90,13 +81,13 @@ const NoticeDetail = () => {
 
   if (!notice) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <Bell size={64} className="mx-auto text-gray-300 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">Notice not found</h3>
+          <Bell size={56} className="mx-auto text-gray-300 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-500 mb-2 font-heading">Notice not found</h3>
           <button
             onClick={() => navigate('/notice')}
-            className="mt-4 bg-[#19aaba] text-white px-4 py-2 rounded-lg hover:bg-[#158c99] transition-colors"
+            className="mt-3 bg-accent text-secondary px-5 py-2 rounded-lg hover:bg-accent-dark transition-colors font-medium text-sm"
           >
             Back to Notices
           </button>
@@ -106,88 +97,75 @@ const NoticeDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-[#19aaba] via-[#158c99] to-[#116d77] text-white py-8">
+    <div className="min-h-screen bg-surface">
+      {/* Header */}
+      <div className="bg-primary text-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate('/notice')}
-            className="flex items-center gap-2 text-cyan-100 hover:text-white transition-colors mb-4"
+            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-4 text-sm"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
             Back to Notices
           </button>
           <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Bell size={32} className="mr-3" />
-              <h1 className="text-2xl md:text-3xl font-bold">Notice Details</h1>
+            <div className="flex items-center justify-center mb-2">
+              <Bell size={28} className="mr-3 text-accent" />
+              <h1 className="text-2xl sm:text-3xl font-bold font-heading">Notice Details</h1>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Notice Content */}
+      {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className={`bg-white rounded-xl shadow-lg border-l-4 ${getPriorityColor(notice.priority)} overflow-hidden`}>
-          {/* Notice Header */}
-          <div className="p-8">
-            <div className="flex items-start justify-between mb-6">
+        <div className={`bg-white rounded-xl shadow-sm border-l-4 ${getPriorityColor(notice.priority)} border border-gray-100 overflow-hidden`}>
+          <div className="p-7 sm:p-8">
+            <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3">
                 {getPriorityIcon(notice.priority)}
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  categories.find(cat => cat.value === notice.type)?.color || 'bg-gray-100 text-gray-800'
+                  categories.find(c => c.value === notice.type)?.color || 'bg-gray-100 text-gray-700'
                 }`}>
-                  {categories.find(cat => cat.value === notice.type)?.label || notice.type}
+                  {categories.find(c => c.value === notice.type)?.label || notice.type}
                 </span>
               </div>
-              <div className="text-right text-sm text-gray-500">
+              <div className="text-right text-sm text-gray-400">
                 <div className="flex items-center gap-1 mb-1">
-                  <Calendar size={14} />
+                  <Calendar size={13} />
                   <span>{new Date(notice.publishedAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock size={14} />
+                  <Clock size={13} />
                   <span>{new Date(notice.publishedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               </div>
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {notice.title}
-            </h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 font-heading">{notice.title}</h2>
 
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-              <User size={16} />
+            <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+              <User size={15} />
               <span>Published by: {notice.publishedBy?.name || 'Unknown'}</span>
             </div>
 
             <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {notice.content}
-              </p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{notice.content}</p>
             </div>
 
             {(notice.pdfUrl || notice.googleFormUrl) && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Additional Resources</h3>
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h3 className="text-base font-semibold text-primary mb-3 font-heading">Additional Resources</h3>
                 <div className="flex flex-wrap gap-3">
                   {notice.pdfUrl && (
-                    <a
-                      href={notice.pdfUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-50 text-cyan-700 hover:bg-cyan-100"
-                    >
+                    <a href={notice.pdfUrl} target="_blank" rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/20 text-secondary hover:bg-accent/40 transition-colors font-medium text-sm">
                       <FileText size={16} /> View PDF
                     </a>
                   )}
                   {notice.googleFormUrl && (
-                    <a
-                      href={notice.googleFormUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 text-green-700 hover:bg-green-100"
-                    >
+                    <a href={notice.googleFormUrl} target="_blank" rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-colors font-medium text-sm">
                       <ExternalLink size={16} /> Open Google Form
                     </a>
                   )}
