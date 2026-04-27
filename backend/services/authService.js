@@ -323,8 +323,8 @@ class AuthService {
     await user.save();
   }
 
-  async login(studentId, password) {
-    const result = await userService.login(studentId, password);
+  async login(email, password) {
+    const result = await userService.login(email, password);
     return result;
   }
 

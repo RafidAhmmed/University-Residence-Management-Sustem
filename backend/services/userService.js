@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { normalizeStudentId } = require('../utils/studentAccount');
+const { normalizeStudentEmail } = require('../utils/studentAccount');
 
 class UserService {
   async createUser(userData) {
@@ -35,9 +35,9 @@ class UserService {
     return await User.find();
   }
 
-  async login(studentId, password) {
-    const normalizedStudentId = normalizeStudentId(studentId);
-    const user = await this.getUserByStudentId(normalizedStudentId);
+  async login(email, password) {
+    const normalizedEmail = normalizeStudentEmail(email);
+    const user = await this.getUserByEmail(normalizedEmail);
     if (!user) {
       throw new Error('User not found');
     }

@@ -91,11 +91,19 @@ const Login = () => {
       if (!formData.gender) newErrors.gender = "Gender is required";
     }
 
-    if (!formData.studentId.trim()) {
-      newErrors.studentId = "Student ID is required";
+    if (isRegister) {
+      if (!formData.studentId.trim()) {
+        newErrors.studentId = "Student ID is required";
+      } else {
+        const input = formData.studentId.trim();
+        if (!/^\d{6,8}$/.test(input)) newErrors.studentId = "Enter your 6-8 digit Student ID (e.g., 20012001)";
+      }
     } else {
-      const input = formData.studentId.trim();
-      if (!/^\d{6,8}$/.test(input)) newErrors.studentId = "Enter your 6-8 digit Student ID (e.g., 20012001)";
+      if (!formData.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (!/^\S+@\S+\.\S+$/.test(formData.email.trim().toLowerCase())) {
+        newErrors.email = "Enter a valid email address";
+      }
     }
 
     if (!formData.password) newErrors.password = "Password is required";
@@ -123,7 +131,10 @@ const Login = () => {
         toast.success("OTP sent to your email. Verify to complete registration.");
         navigate("/verify-otp", { state: { purpose: "register", email: registerData.email } });
       } else {
-        const response = await login(formData);
+        const response = await login({
+          email: formData.email.trim().toLowerCase(),
+          password: formData.password,
+        });
         toast.success("Login successful!");
         const from = location.state?.from?.pathname || (response.user.role === "admin" ? "/admin" : "/user/profile");
         navigate(from, { replace: true });
@@ -168,7 +179,7 @@ const Login = () => {
             <p className="text-gray-500 text-sm">
               {isRegister
                 ? "Register for the hall management system"
-                : "Enter your Student ID and password to access the hall management system"
+                : "Enter your email and password to access the hall management system"
               }
             </p>
           </div>
@@ -275,19 +286,29 @@ const Login = () => {
               </div>
             )}
 
-            {/* Student ID */}
-            <div>
-              <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">Student ID</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-4 w-4 text-gray-400" />
+            {isRegister && (
+              <div>
+                <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">Student ID</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-4 w-4 text-gray-400" />
+                  </div>
+                  <input id="studentId" name="studentId" type="text" placeholder="Enter your Student ID (e.g., 200107)" value={formData.studentId} onChange={handleChange}
+                    className={`${inputClass} pl-10 ${errors.studentId ? errorBorder : normalBorder}`} />
                 </div>
-                <input id="studentId" name="studentId" type="text" placeholder="Enter your Student ID (e.g., 200107)" value={formData.studentId} onChange={handleChange}
-                  className={`${inputClass} pl-10 ${errors.studentId ? errorBorder : normalBorder}`} />
+                {errors.studentId && <p className="mt-1 text-xs text-danger">{errors.studentId}</p>}
+                <p className="mt-1 text-xs text-gray-400">Use this format: studentId.departmentCode@{STUDENT_EMAIL_DOMAIN}</p>
               </div>
-              {errors.studentId && <p className="mt-1 text-xs text-danger">{errors.studentId}</p>}
-              {isRegister && <p className="mt-1 text-xs text-gray-400">Use this format: studentId.departmentCode@{STUDENT_EMAIL_DOMAIN}</p>}
-            </div>
+            )}
+
+            {!isRegister && (
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                <input id="email" name="email" type="email" placeholder="Enter your email" value={formData.email} onChange={handleChange}
+                  className={`${inputClass} ${errors.email ? errorBorder : normalBorder}`} />
+                {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
+              </div>
+            )}
 
             {/* Password */}
             <div>
